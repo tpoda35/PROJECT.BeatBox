@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: beatbox-backend
+
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/beatbox-realm
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/beatbox-backend
+    username: postgres
+    password: tomi1992
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+
+server:
+  port: 8090
+
+keycloak:
+  auth-server-url: yourKeycloakServerUrl
+  realm: yourRealmName
+  client:
+    id: yourClientId
+    secret: yourClientSecret
