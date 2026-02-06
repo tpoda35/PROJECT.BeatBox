@@ -6,7 +6,7 @@ export default function App() {
 
     const api = useSharedApi();
     const loadSomething = async () => {
-        const data = await api.get("/admin");
+        const data = await api.get("/test");
         console.log(data);
     };
 

@@ -1,5 +1,7 @@
-package com.beatbox.beatboxbackend.config;
+package com.beatbox.beatboxbackend.auth.config;
 
+import com.beatbox.beatboxbackend.auth.AppUserSeedingFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -13,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -26,7 +29,10 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final AppUserSeedingFilter appUserSeedingFilter;
 
     private static final String[] WHITE_LIST_URL = {
             "/api/auth/**",
@@ -48,14 +54,16 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST_URL).permitAll()
-                        .requestMatchers("/api/admin").hasRole("ROLE_admin")
+                        .requestMatchers("/api/admin").hasRole("admin")
                         .anyRequest().authenticated()
                 )
                 .securityContext(context -> context
                         .requireExplicitSave(false))
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(keycloakJwtConverter()))
-                );
+                )
+                .addFilterAfter(appUserSeedingFilter, BearerTokenAuthenticationFilter.class);
+
         return http.build();
     }
 
