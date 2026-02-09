@@ -3,6 +3,6 @@ package com.beatbox.beatboxbackend.auth;
 import java.util.UUID;
 
 public interface AppUserService {
-    AppUser getAppUser(UUID id);
+    AppUser getLoggedInUser();
     AppUser getOrCreateAppUser(UUID keycloakId);
 }
