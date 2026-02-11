@@ -28,11 +28,6 @@
   --text-muted: #bdbdbd;
 }
 
-body {
-  min-width: 320px;
-  min-height: 100vh;
-}
-
 button {
   border: none;
   border-radius: 8px;
@@ -43,6 +38,11 @@ button {
   background-color: var(--accent);
   cursor: pointer;
   transition: opacity 0.2s ease;
+  box-sizing: border-box;
+}
+
+a {
+  box-sizing: border-box;
 }
 
 button:hover {
