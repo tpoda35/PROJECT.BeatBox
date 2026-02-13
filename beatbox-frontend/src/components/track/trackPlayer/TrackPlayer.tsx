@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
 
-export default function WaveformPlayer({ url }: {url: string}) {
+export default function TrackPlayer({ url }: {url: string}) {
     const waveformRef = useRef<HTMLDivElement | null>(null);
     const wavesurferRef = useRef<WaveSurfer | null>(null);
 

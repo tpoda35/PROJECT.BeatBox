@@ -1,0 +1,42 @@
+.trackListItem {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    color: var(--text);
+    align-items: flex-start;
+}
+
+.cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.info {
+    flex: 1;
+}
+
+.artist {
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-muted-3);
+}
+
+.title {
+    margin: 2px 0 6px 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stats {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-muted-2);
+}
+
+.stats svg {
+    position: relative;
+    top: 2px;
+}

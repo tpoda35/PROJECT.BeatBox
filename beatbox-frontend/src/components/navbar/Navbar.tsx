@@ -39,7 +39,7 @@ const Navbar = () => {
                 {/* Desktop Links */}
                 <ul className={styles.navLinks}>
                     <li>
-                        <NavLink to="/home" className={getLinkClass}>
+                        <NavLink to="/" className={getLinkClass}>
                             Home
                         </NavLink>
                     </li>
@@ -64,10 +64,10 @@ const Navbar = () => {
                 <div className={styles.navRight}>
                     {!authenticated ? (
                         <>
-                            <button onClick={login} className={styles.authBtn}>
+                            <button onClick={login}>
                                 Login
                             </button>
-                            <button onClick={register} className={styles.authBtn}>
+                            <button onClick={register}>
                                 Register
                             </button>
                         </>
