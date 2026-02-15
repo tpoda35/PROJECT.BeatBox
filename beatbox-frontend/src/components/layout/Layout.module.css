@@ -3,9 +3,5 @@
     width: 100%;
     margin: 0 auto;
     display: flex;
-    padding: 2rem 2rem 0 2rem;
-
-    flex-wrap: wrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
+    padding: 30px 32px 0 32px;
 }
