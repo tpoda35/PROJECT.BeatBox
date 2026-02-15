@@ -1,0 +1,62 @@
+.card {
+    width: 162px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    position: relative;
+    margin-right: 10px;
+}
+
+.card:last-child {
+    margin-right: 0;
+}
+
+.coverWrapper {
+    position: relative;
+}
+
+.coverImage {
+    width: 100%;
+    height: 165px;
+    object-fit: cover;
+    display: block;
+}
+
+.verticalLabel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 32px;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.85);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+}
+
+.info {
+    padding: 10px;
+}
+
+.title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.65);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
