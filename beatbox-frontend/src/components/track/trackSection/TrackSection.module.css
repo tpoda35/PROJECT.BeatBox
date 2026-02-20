@@ -1,6 +1,7 @@
 .mainContainer {
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
 }
 
 .container {
@@ -11,11 +12,5 @@
 }
 
 .title {
-    padding-bottom: 5px;
-}
-
-@media (max-width: 600px) {
-    .container {
-        flex-direction: column;
-    }
+    margin-bottom: 10px;
 }

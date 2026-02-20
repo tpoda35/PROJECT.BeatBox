@@ -1,14 +1,8 @@
 .card {
-    width: 162px;
     border-radius: 8px;
     overflow: hidden;
-    flex-shrink: 0;
     position: relative;
-    margin-right: 10px;
-}
-
-.card:last-child {
-    margin-right: 0;
+    flex: 1 1 160px;
 }
 
 .coverWrapper {
