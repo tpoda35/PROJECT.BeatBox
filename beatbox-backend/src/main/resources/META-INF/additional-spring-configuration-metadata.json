@@ -4,5 +4,10 @@
       "name": "spring.security.oauth2.resourceserver.jwt.issuer-uri",
       "type": "java.lang.String",
       "description": "Keycloak issuer URI."
-  }
-] }
+    },
+    {
+      "name": "app.upload.audioDir",
+      "type": "java.lang.String",
+      "description": "The absolute path where the music gets saved."
+    }
+  ] }

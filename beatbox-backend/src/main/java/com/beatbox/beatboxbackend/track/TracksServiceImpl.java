@@ -2,19 +2,24 @@ package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.AppUser;
 import com.beatbox.beatboxbackend.auth.AppUserService;
+import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 import static com.beatbox.beatboxbackend.track.TrackMapper.createTrack;
@@ -27,53 +32,91 @@ public class TracksServiceImpl implements TrackService {
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
 
+    @Value("${app.upload.audioDir}")
+    private String audioUploadDir;
+
     @Transactional
     @Override
     public Track uploadTrack(String title, MultipartFile file) throws IOException {
-        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
-        Path target = Paths.get("uploads/audio/" + fileName);
-        Files.createDirectories(target.getParent());
-        Files.write(target, file.getBytes());
-
         AppUser artist = appUserService.getLoggedInUser();
+        Track track = null;
+        boolean saved = false;
 
-        return trackRepository.save(createTrack(title, fileName, artist));
+        while (!saved) {
+            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            Path target = Paths.get(audioUploadDir, fileName);
+            Files.createDirectories(target.getParent());
+
+            file.transferTo(target.toFile());
+
+            try {
+                track = trackRepository.save(createTrack(title, fileName, artist));
+                saved = true;
+            } catch (DataIntegrityViolationException e) {
+                Files.deleteIfExists(target);
+            }
+        }
+
+        return track;
     }
 
     @Override
     public ResponseEntity<ResourceRegion> streamTrack(UUID trackId, HttpHeaders headers) throws IOException {
-        Track track = trackRepository.findById(trackId).orElseThrow();
-        Path path = Paths.get("uploads/audio/" + track.getFileName());
+        Track track = trackRepository.findById(trackId)
+                .orElseThrow(TrackNotFoundException::new);
+
+        Path path = Paths.get(audioUploadDir, track.getFileName());
         UrlResource resource = new UrlResource(path.toUri());
 
-        long contentLength = Files.size(path);
-
-        String mimeType = Files.probeContentType(path);
-        if (mimeType == null) mimeType = "application/octet-stream";
-
-        HttpRange range = headers.getRange().isEmpty() ? null : headers.getRange().getFirst();
-
-        long start = 0;
-        long end = contentLength - 1;
-
-        if (range != null) {
-            start = range.getRangeStart(contentLength);
-            end = range.getRangeEnd(contentLength);
+        if (!resource.exists()) {
+            throw new FileNotFoundException("File not found: " + track.getFileName());
         }
 
-//        long chunkSize = 1024 * 1024;
-//        long rangeLength = Math.min(chunkSize, end - start + 1);
+        long contentLength = resource.contentLength();
 
-        long rangeLength = end - start + 1;
+        String mimeType = Files.probeContentType(path);
+        if (mimeType == null) {
+            mimeType = "application/octet-stream";
+        }
 
-        ResourceRegion region = new ResourceRegion(resource, start, rangeLength);
+        String eTag = generateEtag(path);
 
-        return ResponseEntity.status(range == null ? HttpStatus.OK : HttpStatus.PARTIAL_CONTENT)
+        String ifNoneMatch = headers.getFirst(HttpHeaders.IF_NONE_MATCH);
+        if (eTag.equals(ifNoneMatch)) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED)
+                    .header(HttpHeaders.ETAG, eTag)
+                    .header(HttpHeaders.CACHE_CONTROL, "public, max-age=86400")
+                    .build();
+        }
+
+        List<HttpRange> ranges = headers.getRange();
+
+        ResponseEntity.BodyBuilder builder = ranges.isEmpty()
+                ? ResponseEntity.ok()
+                : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT);
+
+        ResourceRegion region;
+
+        if (ranges.isEmpty()) {
+            region = new ResourceRegion(resource, 0, contentLength);
+        } else {
+            HttpRange range = ranges.getFirst();
+            region = range.toResourceRegion(resource);
+        }
+
+        return builder
                 .contentType(MediaType.parseMediaType(mimeType))
-                .header("Accept-Ranges", "bytes")
-                .header("Content-Range", "bytes " + start + "-" + (start + rangeLength - 1) + "/" + contentLength)
-                .contentLength(rangeLength)
+                .header(HttpHeaders.ACCEPT_RANGES, "bytes")
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=86400")
+                .header(HttpHeaders.ETAG, eTag)
+                .contentLength(region.getCount())
                 .body(region);
+    }
+
+    private String generateEtag(Path path) throws IOException {
+        long lastModified = Files.getLastModifiedTime(path).toMillis();
+        long size = Files.size(path);
+        return "\"" + lastModified + "-" + size + "\"";
     }
 
 }

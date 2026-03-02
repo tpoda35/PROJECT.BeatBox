@@ -15,7 +15,6 @@ import java.util.UUID;
 public class TrackController {
 
     private final TrackService trackService;
-    private final TrackRepository trackRepository;
 
     @PostMapping("/api/tracks/upload")
     public void uploadTrack(

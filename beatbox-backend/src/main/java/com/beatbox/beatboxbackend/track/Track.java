@@ -29,17 +29,13 @@ public class Track {
 
     @NotBlank(message = "File name cannot be blank.")
     @Size(max = 200, message = "File name cannot exceed 200 characters.")
+    @Column(unique = true)
     private String fileName;
 
     @ManyToOne
     @JoinColumn(name = "artist_id", nullable = false)
     @NotNull(message = "Artist cannot be null.")
     private AppUser artist;
-
-//    @NotNull(message = "Duration is required.")
-//    @Min(value = 1, message = "Duration must be at least 1 second.")
-//    @Max(value = 3600, message = "Duration cannot exceed 1 hour.")
-//    private Integer duration;
 
     @Column(updatable = false)
     @CreationTimestamp

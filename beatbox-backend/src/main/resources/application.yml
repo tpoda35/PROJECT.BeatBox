@@ -30,9 +30,6 @@ spring:
 server:
   port: 8090
 
-keycloak:
-  auth-server-url: yourKeycloakServerUrl
-  realm: yourRealmName
-  client:
-    id: yourClientId
-    secret: yourClientSecret
+app:
+  upload:
+    audioDir: C:/uploads/audio
