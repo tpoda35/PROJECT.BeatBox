@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
+import styles from "./TrackPlayer.module.css";
+import {IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume} from "@tabler/icons-react";
 
-export default function TrackPlayer({ url }: {url: string}) {
+export default function TrackPlayer({ url }: { url: string }) {
     const waveformRef = useRef<HTMLDivElement | null>(null);
     const wavesurferRef = useRef<WaveSurfer | null>(null);
 
@@ -16,7 +18,7 @@ export default function TrackPlayer({ url }: {url: string}) {
             waveColor: "#999",
             progressColor: "#ff5500",
             cursorColor: "#ff5500",
-            height: 80,
+            height: 35,
             barWidth: 2,
             barGap: 2
         });
@@ -47,45 +49,25 @@ export default function TrackPlayer({ url }: {url: string}) {
     };
 
     return (
-        <div style={{
-            width: "700px",
-            padding: "20px",
-            borderRadius: "12px",
-            background: "#111",
-            color: "white"
-        }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-                <button
-                    onClick={togglePlay}
-                    style={{
-                        background: "#ff5500",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: "50px",
-                        height: "50px",
-                        fontSize: "18px",
-                        cursor: "pointer",
-                        color: "white"
-                    }}
-                >
-                    {isPlaying ? "⏸" : "▶"}
-                </button>
+        <div className={styles.container}>
+            <button onClick={togglePlay} className={styles.playButton}>
+                {isPlaying ? <IconPlayerPlayFilled size={20} /> : <IconPlayerPauseFilled size={20} />}
+            </button>
 
-                <div style={{ flex: 1 }}>
-                    <div ref={waveformRef} />
-                </div>
+            <div className={styles.waveformWrapper}>
+                <div ref={waveformRef} />
+            </div>
 
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                    <span style={{ fontSize: "12px" }}>🔊</span>
-                    <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.01"
-                        value={volume}
-                        onChange={handleVolumeChange}
-                    />
-                </div>
+            <div className={styles.volumeContainer}>
+                <IconVolume size={12}/>
+                <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={handleVolumeChange}
+                />
             </div>
         </div>
     );

@@ -52,7 +52,7 @@ export default function App() {
                     {/*<button onClick={logout}>Logout</button>*/}
                     {/*<button onClick={loadSomething}>Call API</button>*/}
                     <button onClick={uploadTrack}>Upload Track</button>
-                    <TrackPlayer url="http://localhost:8090/api/tracks/stream/b3220121-cd81-434d-8e88-3eb222fabbe3" />
+                    {/*<TrackPlayer url="http://localhost:8090/api/tracks/stream/b3220121-cd81-434d-8e88-3eb222fabbe3" />*/}
                 </>
         </>
     );
