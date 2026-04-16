@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import WaveSurfer from "wavesurfer.js";
 import styles from "./TrackPlayer.module.css";
 import {IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume} from "@tabler/icons-react";
+import RangeSlider from "../../reusable/rangeSlider/RangeSlider.tsx";
 
 export default function TrackPlayer({ url }: { url: string }) {
     const waveformRef = useRef<HTMLDivElement | null>(null);
@@ -16,11 +17,11 @@ export default function TrackPlayer({ url }: { url: string }) {
         wavesurferRef.current = WaveSurfer.create({
             container: waveformRef.current,
             waveColor: "#999",
-            progressColor: "#ff5500",
-            cursorColor: "#ff5500",
+            progressColor: "#CA3E47",
             height: 35,
             barWidth: 2,
-            barGap: 2
+            barGap: 2,
+            fillParent: true
         });
 
         wavesurferRef.current.load(url);
@@ -39,19 +40,10 @@ export default function TrackPlayer({ url }: { url: string }) {
         wavesurferRef.current.playPause();
     };
 
-    const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = parseFloat(e.target.value);
-        setVolume(value);
-
-        if (wavesurferRef.current) {
-            wavesurferRef.current.setVolume(value);
-        }
-    };
-
     return (
         <div className={styles.container}>
             <button onClick={togglePlay} className={styles.playButton}>
-                {isPlaying ? <IconPlayerPlayFilled size={20} /> : <IconPlayerPauseFilled size={20} />}
+                {isPlaying ? <IconPlayerPauseFilled size={20} /> :  <IconPlayerPlayFilled size={20} />}
             </button>
 
             <div className={styles.waveformWrapper}>
@@ -59,14 +51,18 @@ export default function TrackPlayer({ url }: { url: string }) {
             </div>
 
             <div className={styles.volumeContainer}>
-                <IconVolume size={12}/>
-                <input
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.01"
+                <IconVolume size={16}/>
+                <RangeSlider
                     value={volume}
-                    onChange={handleVolumeChange}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    onChange={(value) => {
+                        setVolume(value);
+                        wavesurferRef.current?.setVolume(value);
+                    }}
+                    leftColor="var(--accent)"
+                    rightColor="var(--panel-2)"
                 />
             </div>
         </div>

@@ -5,7 +5,7 @@ const TrackPlayBar = () => {
 
     return (
         <div className={styles.trackPlayBar}>
-            <TrackPlayer url="http://localhost:8090/api/tracks/stream/80cb4a3e-06b1-4922-81cf-38cde52b57d9" />
+            <TrackPlayer url="http://localhost:8090/api/tracks/stream/61bc404e-2016-4ca0-89d6-0e74895dd4a9" />
         </div>
     );
 };
