@@ -5,7 +5,7 @@ import {IconCircleCheckFilled, IconMusic, IconUserFilled} from "@tabler/icons-re
 const ArtistListItem = ({
                             name,
                             followers,
-                            songs,
+                            tracks,
                             imageUrl,
                             verified = false,
                             onFollow,
@@ -25,7 +25,7 @@ const ArtistListItem = ({
                     </div>
 
                     <div className={styles.meta}>
-                        <IconUserFilled size={12} /> {followers.toLocaleString()} &nbsp; <IconMusic size={12} /> {songs}
+                        <IconUserFilled size={12} /> {followers.toLocaleString()} &nbsp; <IconMusic size={12} /> {tracks}
                     </div>
                 </div>
             </div>

@@ -2,7 +2,7 @@
     min-width: 300px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 938px) {
     .container {
         display: none;
     }

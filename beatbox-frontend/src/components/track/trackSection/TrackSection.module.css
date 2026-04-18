@@ -14,3 +14,9 @@
 .title {
     margin-bottom: 10px;
 }
+
+@media (max-width: 938px) {
+    .container {
+
+    }
+}

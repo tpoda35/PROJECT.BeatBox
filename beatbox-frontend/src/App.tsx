@@ -1,7 +1,6 @@
 import {BrowserRouter, Route, Routes} from "react-router";
-import Home from "./pages/Home.tsx";
+import Home from "./pages/home/Home.tsx";
 import Layout from "./components/layout/Layout.tsx";
-import TrackPlayer from "./components/track/trackPlayer/TrackPlayer.tsx";
 import {useSharedApi} from "./api/ApiContext.tsx";
 
 export default function App() {

@@ -40,10 +40,11 @@ public class AppUserSeedingFilter extends OncePerRequestFilter {
                 authentication.getPrincipal() instanceof Jwt jwt) {
 
             String keycloakIdStr = jwt.getSubject();
+            String preferredUsername = jwt.getClaimAsString("preferred_username");
 
             try {
                 UUID keycloakId = UUID.fromString(keycloakIdStr);
-                appUserService.getOrCreateAppUser(keycloakId);
+                appUserService.getOrCreateAppUser(keycloakId, preferredUsername);
 
                 log.debug("User seeded/verified for keycloakId: {}", keycloakId);
 

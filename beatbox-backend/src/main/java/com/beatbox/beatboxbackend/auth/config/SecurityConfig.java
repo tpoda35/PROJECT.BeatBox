@@ -45,7 +45,8 @@ public class SecurityConfig {
             "/configuration/security",
             "/swagger-ui/**",
             "/swagger-ui.html",
-            "/api/tracks/stream/**"
+            "/api/tracks/stream/**",
+            "/api/artists/recommended"
     };
 
     @Bean

@@ -1,8 +1,10 @@
 package com.beatbox.beatboxbackend.auth;
 
+import com.beatbox.beatboxbackend.auth.dto.RecommendedArtistsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,7 +12,9 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import static com.beatbox.beatboxbackend.auth.AppUserMapper.createAppUser;
@@ -29,11 +33,11 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Transactional
     @Override
-    public AppUser getOrCreateAppUser(UUID keycloakId) {
+    public AppUser getOrCreateAppUser(UUID keycloakId, String preferredUsername) {
         return appUserRepository.findByKeycloakId(keycloakId)
                 .orElseGet(() -> {
                     try {
-                        return createUser(keycloakId);
+                        return createUser(keycloakId, preferredUsername);
                     } catch (DataIntegrityViolationException e) {
                         // Race condition: another thread created it
                         return appUserRepository.findByKeycloakId(keycloakId)
@@ -41,6 +45,23 @@ public class AppUserServiceImpl implements AppUserService {
                                         "User creation failed unexpectedly"));
                     }
                 });
+    }
+
+    // This method searches for 3 random users, and fetches their stats
+    // on the repository layer, with a query.
+    @Override
+    public List<RecommendedArtistsDto> getRecommendedArtists() {
+        int limit = 3;
+
+        List<AppUser> users = appUserRepository
+                .findAll(PageRequest.of(0, limit))
+                .getContent();
+
+        List<UUID> ids = users.stream()
+                .map(AppUser::getId)
+                .toList();
+
+        return appUserRepository.findArtistsWithStatsByIds(ids);
     }
 
     private UUID getUserIdFromContextHolder() {
@@ -71,8 +92,8 @@ public class AppUserServiceImpl implements AppUserService {
                 });
     }
 
-    private AppUser createUser(UUID keycloakId) {
-        AppUser appUser = createAppUser(keycloakId);
+    private AppUser createUser(UUID keycloakId, String preferredUsername) {
+        AppUser appUser = createAppUser(keycloakId, preferredUsername);
         return appUserRepository.save(appUser);
     }
 }

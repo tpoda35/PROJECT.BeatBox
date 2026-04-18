@@ -26,6 +26,13 @@ export const useKeycloak = () => {
     };
 
     const updateToken = useCallback(async (minValidity: number = tokenRefreshThreshold) => {
+        if (!keycloak.authenticated || !keycloak.refreshToken) {
+            return null;
+        }
+
+        console.log("Auth:", keycloak.authenticated);
+        console.log("Refresh token:", keycloak.refreshToken);
+
         try {
             const refreshed = await keycloak.updateToken(minValidity);
             if (refreshed) {

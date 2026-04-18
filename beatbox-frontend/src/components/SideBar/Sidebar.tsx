@@ -2,35 +2,43 @@ import SidebarSection from "./sidebarSection/SidebarSection.tsx";
 import styles from './Sidebar.module.css'
 import ArtistListItem from "../artist/artistListItem/ArtistListItem.tsx";
 import TrackListItem from "../track/trackListItem/TrackListItem.tsx";
+import {useSharedApi} from "../../api/ApiContext.tsx";
+import {useEffect, useState} from "react";
+import type {ArtistProps} from "./ArtistProps.ts";
 
 const Sidebar = () => {
+    const api = useSharedApi();
+
+    const [artists, setArtists] = useState<ArtistProps[]>([]);
+
+    console.log(artists);
+
+    useEffect(() => {
+        const fetchArtists = async () => {
+            try {
+                const result = await api.get<ArtistProps[]>("/artists/recommended");
+                setArtists(result);
+            } catch (err) {
+                console.error("Failed to fetch artists", err);
+            }
+        };
+
+        fetchArtists();
+    }, [api]);
+
     return (
         <aside className={styles.container}>
             <SidebarSection title="RECOMMENDED ARTISTS">
-                <ArtistListItem
-                    name="BVDLM"
-                    followers={985}
-                    songs={9}
-                    imageUrl="/pp.jpg"
-                    onFollow={() => alert("Followed BVDLM")}
-                />
-
-                <ArtistListItem
-                    name="Moxla"
-                    followers={4622}
-                    songs={28}
-                    imageUrl="/pp.jpg"
-                    onFollow={() => alert("Followed Moxla")}
-                />
-
-                <ArtistListItem
-                    name="Docteur Bisous"
-                    followers={276}
-                    songs={11}
-                    verified={true}
-                    imageUrl="/pp.jpg"
-                    onFollow={() => alert("Followed Docteur Bisous")}
-                />
+                {artists.map((artist) => (
+                    <ArtistListItem
+                        key={artist.artistId}
+                        name={artist.preferredUsername}
+                        followers={artist.followerCount}
+                        tracks={artist.trackCount}
+                        imageUrl="/pp.jpg"
+                        onFollow={() => alert(`Followed ${artist.preferredUsername}`)}
+                    />
+                ))}
             </SidebarSection>
 
             <SidebarSection title="LISTENING HISTORY">
