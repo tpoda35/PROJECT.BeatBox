@@ -3,6 +3,7 @@ export type ArtistListItemProps = {
     followers: number;
     tracks: number;
     imageUrl: string;
-    verified?: boolean;
+    isVerified: boolean;
+    isFollowing: boolean;
     onFollow?: () => void;
 };

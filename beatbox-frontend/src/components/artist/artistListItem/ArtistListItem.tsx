@@ -7,7 +7,8 @@ const ArtistListItem = ({
                             followers,
                             tracks,
                             imageUrl,
-                            verified = false,
+                            isVerified,
+                            isFollowing,
                             onFollow,
                         }: ArtistListItemProps) => {
     const displayName = name.length > 8 ? name.slice(0, 8) + "..." : name;
@@ -21,7 +22,7 @@ const ArtistListItem = ({
                 <div>
                     <div className={styles.nameRow}>
                         <h4 className={styles.name}>{displayName}</h4>
-                        {verified && <span className={styles.verified}><IconCircleCheckFilled size={20} /></span>}
+                        {isVerified && <span className={styles.verified}><IconCircleCheckFilled size={20} /></span>}
                     </div>
 
                     <div className={styles.meta}>
@@ -32,7 +33,7 @@ const ArtistListItem = ({
 
             {/* Right side */}
             <button onClick={onFollow} className={styles.followButton}>
-                Follow
+                {isFollowing ? "Unfollow" : "Follow"}
             </button>
         </div>
     );

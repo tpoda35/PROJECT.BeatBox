@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.auth;
+package com.beatbox.beatboxbackend.auth.appUser;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -44,7 +44,7 @@ public class AppUserSeedingFilter extends OncePerRequestFilter {
 
             try {
                 UUID keycloakId = UUID.fromString(keycloakIdStr);
-                appUserService.getOrCreateAppUser(keycloakId, preferredUsername);
+                appUserService.seedAppUser(keycloakId, preferredUsername);
 
                 log.debug("User seeded/verified for keycloakId: {}", keycloakId);
 

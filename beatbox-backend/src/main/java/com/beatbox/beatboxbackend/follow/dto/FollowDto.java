@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.follow;
+package com.beatbox.beatboxbackend.follow.dto;
 
 import java.util.UUID;
 

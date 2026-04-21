@@ -1,6 +1,6 @@
 package com.beatbox.beatboxbackend.track;
 
-import com.beatbox.beatboxbackend.auth.AppUser;
+import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 
 public class TrackMapper {
 

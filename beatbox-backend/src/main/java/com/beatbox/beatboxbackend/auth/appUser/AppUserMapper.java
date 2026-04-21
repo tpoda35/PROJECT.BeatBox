@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.auth;
+package com.beatbox.beatboxbackend.auth.appUser;
 
 import java.util.UUID;
 

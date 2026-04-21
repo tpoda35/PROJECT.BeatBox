@@ -1,7 +1,7 @@
 package com.beatbox.beatboxbackend.track;
 
-import com.beatbox.beatboxbackend.auth.AppUser;
-import com.beatbox.beatboxbackend.auth.AppUserService;
+import com.beatbox.beatboxbackend.auth.appUser.AppUser;
+import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.auth;
+package com.beatbox.beatboxbackend.auth.appUser;
 
 import com.beatbox.beatboxbackend.follow.Follow;
 import com.beatbox.beatboxbackend.track.Track;
@@ -33,6 +33,9 @@ public class AppUser {
     private UUID keycloakId;
 
     private String preferredUsername;
+
+    @Column(nullable = false)
+    private boolean isVerified = false;
 
     // Uploaded tracks
     @OneToMany(mappedBy = "artist", orphanRemoval = true)

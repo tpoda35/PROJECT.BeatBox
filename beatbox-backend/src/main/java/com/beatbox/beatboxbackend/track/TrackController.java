@@ -11,12 +11,13 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/tracks")
 @RequiredArgsConstructor
 public class TrackController {
 
     private final TrackService trackService;
 
-    @PostMapping("/api/tracks/upload")
+    @PostMapping("/upload")
     public void uploadTrack(
             @RequestParam("title") String title,
             @RequestParam("file") MultipartFile file
@@ -24,7 +25,7 @@ public class TrackController {
         trackService.uploadTrack(title, file);
     }
 
-    @GetMapping("/api/tracks/stream/{trackId}")
+    @GetMapping("/stream/{trackId}")
     public ResponseEntity<ResourceRegion> streamTrack(
             @PathVariable UUID trackId,
             @RequestHeader HttpHeaders headers

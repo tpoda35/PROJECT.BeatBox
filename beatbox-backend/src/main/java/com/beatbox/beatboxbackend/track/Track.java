@@ -1,6 +1,6 @@
 package com.beatbox.beatboxbackend.track;
 
-import com.beatbox.beatboxbackend.auth.AppUser;
+import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
 package com.beatbox.beatboxbackend.auth.config;
 
-import com.beatbox.beatboxbackend.auth.AppUserSeedingFilter;
+import com.beatbox.beatboxbackend.auth.appUser.AppUserSeedingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

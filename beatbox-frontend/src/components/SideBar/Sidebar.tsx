@@ -4,19 +4,22 @@ import ArtistListItem from "../artist/artistListItem/ArtistListItem.tsx";
 import TrackListItem from "../track/trackListItem/TrackListItem.tsx";
 import {useSharedApi} from "../../api/ApiContext.tsx";
 import {useEffect, useState} from "react";
-import type {ArtistProps} from "./ArtistProps.ts";
+import type {ArtistDto} from "./apiDto/ArtistDto.ts";
+import {useSharedAuth} from "../../auth/AuthContext.tsx";
 
 const Sidebar = () => {
     const api = useSharedApi();
+    const { authenticated } = useSharedAuth();
 
-    const [artists, setArtists] = useState<ArtistProps[]>([]);
-
-    console.log(artists);
+    const [artists, setArtists] = useState<ArtistDto[]>([]);
+    console.log('Artists: ', artists);
 
     useEffect(() => {
+        if (!authenticated) return;
+
         const fetchArtists = async () => {
             try {
-                const result = await api.get<ArtistProps[]>("/artists/recommended");
+                const result = await api.get<ArtistDto[]>("/artists/recommended");
                 setArtists(result);
             } catch (err) {
                 console.error("Failed to fetch artists", err);
@@ -24,7 +27,37 @@ const Sidebar = () => {
         };
 
         fetchArtists();
-    }, [api]);
+    }, [api, authenticated]);
+
+    const handleFollowToggle = async (artistId: string) => {
+        const artist = artists.find(a => a.artistId === artistId);
+        if (!artist) return;
+
+        const isFollowing = artist.isFollowing;
+
+        try {
+            if (isFollowing) {
+                await api.delete(`/follows/${artistId}`);
+            } else {
+                await api.post(`/follows/${artistId}`);
+            }
+
+            // update UI after success
+            setArtists(prev =>
+                prev.map(a =>
+                    a.artistId === artistId
+                        ? {
+                            ...a,
+                            isFollowing: !isFollowing,
+                            followerCount: a.followerCount + (isFollowing ? -1 : 1)
+                        }
+                        : a
+                )
+            );
+        } catch (err) {
+            console.error("Failed to toggle follow", err);
+        }
+    };
 
     return (
         <aside className={styles.container}>
@@ -36,7 +69,9 @@ const Sidebar = () => {
                         followers={artist.followerCount}
                         tracks={artist.trackCount}
                         imageUrl="/pp.jpg"
-                        onFollow={() => alert(`Followed ${artist.preferredUsername}`)}
+                        isVerified={artist.isVerified}
+                        isFollowing={artist.isFollowing}
+                        onFollow={() => handleFollowToggle(artist.artistId)}
                     />
                 ))}
             </SidebarSection>

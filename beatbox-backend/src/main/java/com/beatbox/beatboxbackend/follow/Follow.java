@@ -1,6 +1,6 @@
 package com.beatbox.beatboxbackend.follow;
 
-import com.beatbox.beatboxbackend.auth.AppUser;
+import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
