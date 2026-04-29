@@ -5,13 +5,12 @@ spring:
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
-
-
   security:
     oauth2:
-      resource-server:
+      resourceserver:
         jwt:
           issuer-uri: http://localhost:8080/realms/beatbox-realm
+          jwk-set-uri: http://localhost:8080/realms/beatbox-realm/protocol/openid-connect/certs
 
   datasource:
     url: jdbc:postgresql://localhost:5432/beatbox-backend
@@ -24,11 +23,17 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        format_sql: true
+        format_sql: false
     database: postgresql
 
 server:
   port: 8090
+
+logging:
+  level:
+    org:
+      springframework:
+        security: debug
 
 app:
   upload:

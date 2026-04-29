@@ -38,8 +38,8 @@ public class AppUser {
     private boolean isVerified = false;
 
     // Uploaded tracks
-    @OneToMany(mappedBy = "artist", orphanRemoval = true)
-    private List<Track> tracks;
+    @ManyToMany(mappedBy = "artists")
+    private List<Track> tracks = new ArrayList<>();
 
     // Follow system
     @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL, orphanRemoval = true)

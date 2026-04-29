@@ -16,6 +16,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
 
     boolean existsByKeycloakId(UUID keycloakId);
 
+    // Az a baj, hogy olyan helyen van használva a loggedInuser, ami public endpoint
+    // TODO: megoldani ezt a query-t, hogy akkor is menjen, ha nincs valaki belépve
+
     @Query("""
         SELECT new com.beatbox.beatboxbackend.auth.appUser.artist.dto.ArtistDto(
             au.id,
@@ -23,7 +26,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
             COUNT(DISTINCT f.id),
             COUNT(DISTINCT t.id),
             au.isVerified,
-            CASE WHEN EXISTS (
+            CASE WHEN :currentUserId IS NOT NULL AND EXISTS (
                 SELECT fl FROM Follow fl
                 WHERE fl.follower.id = :currentUserId
                 AND fl.following.id = au.id

@@ -2,7 +2,8 @@ package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -32,14 +34,28 @@ public class Track {
     @Column(unique = true)
     private String fileName;
 
-    @ManyToOne
-    @JoinColumn(name = "artist_id", nullable = false)
-    @NotNull(message = "Artist cannot be null.")
-    private AppUser artist;
+    @ManyToMany
+    @JoinTable(
+            name = "track_artists",
+            joinColumns = @JoinColumn(name = "track_id"),
+            inverseJoinColumns = @JoinColumn(name = "artist_id")
+    )
+    private List<AppUser> artists;
 
     @Column(updatable = false)
     @CreationTimestamp
     private OffsetDateTime uploadedAt;
 
-    //Stats later
+    @Version
+    private Long version;
+
+    public void addArtist(AppUser artist) {
+        this.artists.add(artist);
+        artist.getTracks().add(this);
+    }
+
+    public void removeArtist(AppUser artist) {
+        this.artists.remove(artist);
+        artist.getTracks().remove(this);
+    }
 }

@@ -1,9 +1,9 @@
 import styles from "./Track.module.css";
 import type {TrackProps} from "./TrackProps.ts";
 
-const Track = ({ id, title, artist, coverUrl }: TrackProps) => {
+const Track = ({ title, artist, coverUrl }: TrackProps) => {
     return (
-        <div key={id} className={styles.card}>
+        <div className={styles.card}>
             {/* Album Cover */}
             <div className={styles.coverWrapper}>
                 <img

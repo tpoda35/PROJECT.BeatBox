@@ -1,5 +1,6 @@
 package com.beatbox.beatboxbackend.track;
 
+import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -32,4 +34,10 @@ public class TrackController {
     ) throws IOException {
         return trackService.streamTrack(trackId, headers);
     }
+
+    @GetMapping
+    public List<TrackDto> getTracks() {
+        return trackService.getTracks();
+    }
+
 }

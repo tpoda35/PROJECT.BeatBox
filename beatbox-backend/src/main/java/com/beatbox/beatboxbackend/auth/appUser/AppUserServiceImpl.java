@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import static com.beatbox.beatboxbackend.auth.appUser.AppUserMapper.createAppUser;
@@ -24,7 +25,15 @@ public class AppUserServiceImpl implements AppUserService {
 
     @Override
     public AppUser getLoggedInUser() {
-        return findAppUser(getUserIdFromContextHolder());
+        UUID userId = getUserIdFromContextHolder()
+                .orElseThrow(() -> new AuthorizationDeniedException("Unauthorized, log in again."));
+        return findAppUser(userId);
+    }
+
+    @Override
+    public Optional<AppUser> getLoggedInUserOptional() {
+        return getUserIdFromContextHolder()
+                .flatMap(appUserRepository::findByKeycloakId);
     }
 
     @Transactional
@@ -41,24 +50,23 @@ public class AppUserServiceImpl implements AppUserService {
         }
     }
 
-    private UUID getUserIdFromContextHolder() {
-        Map<String, Object> claims = getClaimsFromJwt();
-
-        return UUID.fromString((String) claims.get("sub"));
-    }
-
-    private Map<String, Object> getClaimsFromJwt() {
+    private Optional<Map<String, Object>> getClaimsFromJwt() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AuthorizationDeniedException("Unauthorized, log in again.");
+            return Optional.empty();
         }
 
         if (!(authentication instanceof JwtAuthenticationToken jwtToken)) {
-            throw new AuthorizationDeniedException("Invalid authentication token.");
+            return Optional.empty();
         }
 
-        return jwtToken.getToken().getClaims();
+        return Optional.of(jwtToken.getToken().getClaims());
+    }
+
+    private Optional<UUID> getUserIdFromContextHolder() {
+        return getClaimsFromJwt()
+                .map(claims -> UUID.fromString((String) claims.get("sub")));
     }
 
     private AppUser findAppUser(UUID keycloakId) {

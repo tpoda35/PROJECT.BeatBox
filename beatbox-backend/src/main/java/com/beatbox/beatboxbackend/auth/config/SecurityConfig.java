@@ -36,17 +36,14 @@ public class SecurityConfig {
 
     private static final String[] WHITE_LIST_URL = {
             "/api/auth/**",
-            "/v2/api-docs",
-            "/v3/api-docs",
+
             "/v3/api-docs/**",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
             "/swagger-ui/**",
             "/swagger-ui.html",
+
             "/api/tracks/stream/**",
-            "/api/artists/recommended"
+            "/api/artists/recommended",
+            "/api/tracks"
     };
 
     @Bean
@@ -78,7 +75,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
+        source.registerCorsConfiguration("/api/**", config);
         return source;
     }
 

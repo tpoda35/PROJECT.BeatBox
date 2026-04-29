@@ -20,7 +20,17 @@ public class ArtistServiceImpl implements ArtistService {
 
     @Override
     public List<ArtistDto> getRecommendedArtists() {
-        AppUser loggedInUser = appUserService.getLoggedInUser();
+        AppUser loggedInUser = appUserService.getLoggedInUserOptional()
+                .orElse(null);
+
+        UUID currentUserId = (loggedInUser != null) ? loggedInUser.getId() : null;
+
+//        TODO: implement recommendation logic
+//        if (appUserService.isLoggedIn()) {
+//            return getRecommendedForUser(appUserService.getLoggedInUser().getId());
+//        } else {
+//            return getRecommendedForGuest();
+//        }
 
         int limit = 3;
 
@@ -32,6 +42,6 @@ public class ArtistServiceImpl implements ArtistService {
                 .map(AppUser::getId)
                 .toList();
 
-        return appUserRepository.findArtistsWithStatsByIds(ids, loggedInUser.getId());
+        return appUserRepository.findArtistsWithStatsByIds(ids, currentUserId);
     }
 }

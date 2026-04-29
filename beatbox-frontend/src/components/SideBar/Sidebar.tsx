@@ -5,18 +5,14 @@ import TrackListItem from "../track/trackListItem/TrackListItem.tsx";
 import {useSharedApi} from "../../api/ApiContext.tsx";
 import {useEffect, useState} from "react";
 import type {ArtistDto} from "./apiDto/ArtistDto.ts";
-import {useSharedAuth} from "../../auth/AuthContext.tsx";
 
 const Sidebar = () => {
     const api = useSharedApi();
-    const { authenticated } = useSharedAuth();
 
     const [artists, setArtists] = useState<ArtistDto[]>([]);
     console.log('Artists: ', artists);
 
     useEffect(() => {
-        if (!authenticated) return;
-
         const fetchArtists = async () => {
             try {
                 const result = await api.get<ArtistDto[]>("/artists/recommended");
@@ -27,7 +23,7 @@ const Sidebar = () => {
         };
 
         fetchArtists();
-    }, [api, authenticated]);
+    }, [api]);
 
     const handleFollowToggle = async (artistId: string) => {
         const artist = artists.find(a => a.artistId === artistId);

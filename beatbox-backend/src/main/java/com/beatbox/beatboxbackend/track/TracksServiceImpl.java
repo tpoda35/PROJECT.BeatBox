@@ -2,6 +2,7 @@ package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
+import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +51,7 @@ public class TracksServiceImpl implements TrackService {
             file.transferTo(target.toFile());
 
             try {
-                track = trackRepository.save(createTrack(title, fileName, artist));
+                track = trackRepository.save(createTrack(title, fileName, List.of(artist)));
                 saved = true;
             } catch (DataIntegrityViolationException e) {
                 Files.deleteIfExists(target);
@@ -111,6 +112,21 @@ public class TracksServiceImpl implements TrackService {
                 .header(HttpHeaders.ETAG, eTag)
                 .contentLength(region.getCount())
                 .body(region);
+    }
+
+    @Override
+    public List<TrackDto> getTracks() {
+        return trackRepository.findAllWithArtists()
+                .stream()
+                .map(t -> new TrackDto(
+                        t.getId(),
+                        t.getTitle(),
+                        t.getArtists()
+                                .stream()
+                                .map(AppUser::getPreferredUsername)
+                                .toList()
+                ))
+                .toList();
     }
 
     private String generateEtag(Path path) throws IOException {
