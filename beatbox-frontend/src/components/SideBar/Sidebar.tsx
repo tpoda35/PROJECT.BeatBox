@@ -10,7 +10,6 @@ const Sidebar = () => {
     const api = useSharedApi();
 
     const [artists, setArtists] = useState<ArtistDto[]>([]);
-    console.log('Artists: ', artists);
 
     useEffect(() => {
         const fetchArtists = async () => {

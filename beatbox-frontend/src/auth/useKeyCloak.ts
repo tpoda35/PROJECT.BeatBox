@@ -27,7 +27,7 @@ export const useKeycloak = () => {
 
     const updateToken = useCallback(async (minValidity: number = tokenRefreshThreshold) => {
         if (!keycloak.authenticated || !keycloak.refreshToken) {
-            return null;
+            return undefined;
         }
 
         console.log("Auth:", keycloak.authenticated);

@@ -11,6 +11,9 @@ export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
 
     const api = useMemo(() => new ApiService(auth.updateToken), [auth.updateToken]);
 
+    // This solves the issue, that the API calls are fired before keycloak init
+    if (auth.loading) return null;
+
     return (
         <ApiContext.Provider value={api}>
             {children}
