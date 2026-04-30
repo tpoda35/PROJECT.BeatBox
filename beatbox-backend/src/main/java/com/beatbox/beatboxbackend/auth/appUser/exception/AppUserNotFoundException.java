@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.auth.appUser;
+package com.beatbox.beatboxbackend.auth.appUser.exception;
 
 public class AppUserNotFoundException extends RuntimeException {
     public AppUserNotFoundException() {

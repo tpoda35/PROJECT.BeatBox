@@ -1,7 +1,7 @@
 package com.beatbox.beatboxbackend.follow;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
-import com.beatbox.beatboxbackend.auth.appUser.AppUserNotFoundException;
+import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserRepository;
 import com.beatbox.beatboxbackend.follow.exception.AlreadyFollowingException;
 import com.beatbox.beatboxbackend.follow.exception.NotFollowingException;

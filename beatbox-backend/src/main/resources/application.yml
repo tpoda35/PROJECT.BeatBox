@@ -1,3 +1,6 @@
+server:
+  port: 8090
+
 spring:
   application:
     name: beatbox-backend
@@ -26,15 +29,16 @@ spring:
         format_sql: false
     database: postgresql
 
-server:
-  port: 8090
-
-logging:
-  level:
-    org:
-      springframework:
-        security: debug
+keycloak:
+  auth-server-url: http://localhost:8080
+  realm: beatbox-realm
+  client:
+    id: beatbox-backend
+    secret: J0OvqmN1zgOzAe4ZET1kWdP1OYjMrSxt
 
 app:
   upload:
     audioDir: C:/uploads/audio
+  sync:
+    keycloak-batch-size: 100
+    db-batch-size: 25

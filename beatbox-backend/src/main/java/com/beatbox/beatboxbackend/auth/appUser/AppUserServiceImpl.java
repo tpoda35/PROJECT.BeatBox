@@ -1,5 +1,6 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
+import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;

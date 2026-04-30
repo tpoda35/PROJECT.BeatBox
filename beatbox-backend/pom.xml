@@ -93,6 +93,12 @@
             <version>3.2.3</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-admin-client</artifactId>
+            <version>26.0.5</version>
+        </dependency>
     </dependencies>
 
     <build>
