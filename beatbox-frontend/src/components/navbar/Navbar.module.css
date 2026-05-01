@@ -54,6 +54,10 @@
     color: var(--accent);
 }
 
+.mobileLink.active {
+    color: var(--accent);
+}
+
 .navRight {
     display: flex;
     align-items: center;
@@ -65,7 +69,7 @@
     background: var(--panel-2);
     color: var(--text);
     padding: 0.6em 1.2em;
-    border-radius: 10px;
+    border-radius: 8px;
     font-weight: 700;
     transition: 0.2s ease;
 

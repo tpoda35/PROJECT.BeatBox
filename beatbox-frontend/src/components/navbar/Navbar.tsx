@@ -7,8 +7,13 @@ import { useSharedAuth } from "../../auth/AuthContext.tsx";
 const Navbar = () => {
     const [isOpen, setOpen] = useState(false);
 
-    const getLinkClass = ({ isActive }: { isActive: boolean }) =>
+    const getDesktopLinkClass = ({ isActive }: { isActive: boolean }) =>
         isActive ? `${styles.link} ${styles.active}` : styles.link;
+
+    const getMobileLinkClass = ({ isActive }: { isActive: boolean }) =>
+        isActive
+            ? `${styles.mobileLink} ${styles.active}`
+            : styles.mobileLink;
 
     const closeMenu = () => setOpen(false);
 
@@ -39,22 +44,22 @@ const Navbar = () => {
                 {/* Desktop Links */}
                 <ul className={styles.navLinks}>
                     <li>
-                        <NavLink to="/" className={getLinkClass}>
+                        <NavLink to="/" className={getDesktopLinkClass}>
                             Home
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/feed" className={getLinkClass}>
+                        <NavLink to="/feed" className={getDesktopLinkClass}>
                             Feed
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/library" className={getLinkClass}>
+                        <NavLink to="/library" className={getDesktopLinkClass}>
                             Library
                         </NavLink>
                     </li>
                     <li>
-                        <NavLink to="/search" className={getLinkClass}>
+                        <NavLink to="/search" className={getDesktopLinkClass}>
                             Search
                         </NavLink>
                     </li>
@@ -81,6 +86,10 @@ const Navbar = () => {
                                 {user?.username ? user.username : "Profile"}
                             </NavLink>
 
+                            <NavLink to="/upload" className={getDesktopLinkClass}>
+                                Upload
+                            </NavLink>
+
                             <button onClick={logout} className={styles.authBtn}>
                                 Logout
                             </button>
@@ -101,19 +110,19 @@ const Navbar = () => {
             {/* Mobile Dropdown */}
             {isOpen && (
                 <div className={styles.mobileDropdown}>
-                    <NavLink to="/" className={styles.mobileLink} onClick={closeMenu}>
+                    <NavLink to="/" className={getMobileLinkClass} onClick={closeMenu}>
                         Home
                     </NavLink>
 
-                    <NavLink to="/feed" className={styles.mobileLink} onClick={closeMenu}>
+                    <NavLink to="/feed" className={getMobileLinkClass} onClick={closeMenu}>
                         Feed
                     </NavLink>
 
-                    <NavLink to="/library" className={styles.mobileLink} onClick={closeMenu}>
+                    <NavLink to="/library" className={getMobileLinkClass} onClick={closeMenu}>
                         Library
                     </NavLink>
 
-                    <NavLink to="/search" className={styles.mobileLink} onClick={closeMenu}>
+                    <NavLink to="/search" className={getMobileLinkClass} onClick={closeMenu}>
                         Search
                     </NavLink>
 

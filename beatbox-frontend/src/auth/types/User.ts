@@ -1,8 +1,8 @@
 export interface User {
-    id: string;
-    username?: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    roles: string[];
+    id: string | undefined;
+    username: string | undefined;
+    email: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    roles: string[]
 }

@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+/* LEFT SIDE - IMAGE BOX */
+.leftSide {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 2rem 0 2rem;
+    gap: 1rem;
+}
+
+/* RIGHT SIDE - FORM */
+.rightSide {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem;
+    gap: 1rem;
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.05);
+}

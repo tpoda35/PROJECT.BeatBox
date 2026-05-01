@@ -1,18 +1,20 @@
 import {useState, useEffect, useRef, useCallback} from "react";
 import keycloak from "./KeyCloak";
 import type { User } from "./types/User.ts";
+import type {AppTokenParsed} from "./types/AppTokenParsed.ts";
 
 const tokenRefreshThreshold = 30;
 
 export const useKeycloak = () => {
     const [authenticated, setAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
+    console.log('User: ', user);
     const [loading, setLoading] = useState(true);
 
     const refreshInterval = useRef<number | null>(null);
 
     const getUser = (): User | null => {
-        const tokenParsed = keycloak.tokenParsed as Record<string, any> | undefined;
+        const tokenParsed = keycloak.tokenParsed as AppTokenParsed | undefined;
         if (!tokenParsed) return null;
 
         return {
@@ -77,7 +79,7 @@ export const useKeycloak = () => {
         return () => {
             if (refreshInterval.current) clearInterval(refreshInterval.current);
         };
-    }, []);
+    });
 
     const login = async () => {
         await keycloak.login();
