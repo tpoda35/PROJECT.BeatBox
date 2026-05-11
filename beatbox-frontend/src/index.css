@@ -27,6 +27,7 @@
   --text-muted: #bdbdbd;
   --text-muted-2: #888;
   --text-muted-3: #aaa;
+  --border-color-1: rgba(255, 255, 255, 0.04);
 }
 
 body {

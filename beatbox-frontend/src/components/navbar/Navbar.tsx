@@ -3,6 +3,7 @@ import { NavLink } from "react-router";
 import { Sling as Hamburger } from "hamburger-react";
 import styles from "./Navbar.module.css";
 import { useSharedAuth } from "../../auth/AuthContext.tsx";
+import {IconUpload} from "@tabler/icons-react";
 
 const Navbar = () => {
     const [isOpen, setOpen] = useState(false);
@@ -87,7 +88,7 @@ const Navbar = () => {
                             </NavLink>
 
                             <NavLink to="/upload" className={getDesktopLinkClass}>
-                                Upload
+                                <IconUpload />
                             </NavLink>
 
                             <button onClick={logout} className={styles.authBtn}>
