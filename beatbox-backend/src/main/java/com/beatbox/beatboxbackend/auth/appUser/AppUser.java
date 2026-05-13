@@ -53,7 +53,7 @@ public class AppUser {
     private Instant createdAt;
 
     @UpdateTimestamp
-    private Instant updatedAt;
+    private Instant modifiedAt;
 
     @Version
     private Long version;

@@ -9,7 +9,6 @@ const TrackBrowser = () => {
     const api = useSharedApi();
 
     const [tracks, setTracks] = useState<TrackDto[]>([]);
-    console.log('tracks: ', tracks);
 
     useEffect(() => {
         const fetchTracks = async () => {
@@ -30,26 +29,13 @@ const TrackBrowser = () => {
                 {tracks.map((track) => (
                     <Track
                         key={track.trackId}
+                        trackId={track.trackId}
                         title={track.title}
                         artist={track.artists.join(", ")}
                         coverUrl="https://picsum.photos/300/300?random=1"
                     />
                 ))}
             </TrackSection>
-
-            {/*<TrackSection title="Recommended tracks">*/}
-            {/*    <Track id={1} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={2} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={3} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={4} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*</TrackSection>*/}
-
-            {/*<TrackSection title="Recently played">*/}
-            {/*    <Track id={1} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={2} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={3} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*    <Track id={4} title="LIDZTER - PLAY IT RIGHT" artist="LIDZTER, ROYAL, Jason" coverUrl="https://picsum.photos/300/300?random=1" />*/}
-            {/*</TrackSection>*/}
         </section>
     );
 };

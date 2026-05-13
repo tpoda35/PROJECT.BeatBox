@@ -38,6 +38,6 @@ public class TrackController {
     @GetMapping
     public List<TrackDto> getTracks() {
         return trackService.getTracks();
-    }
+    } 
 
 }

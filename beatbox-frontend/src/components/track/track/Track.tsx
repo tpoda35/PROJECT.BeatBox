@@ -1,9 +1,19 @@
 import styles from "./Track.module.css";
-import type {TrackProps} from "./TrackProps.ts";
+import type {TrackProps} from "./types/TrackProps.ts";
+import {useTrack} from "./TrackContext.tsx";
 
-const Track = ({ title, artist, coverUrl }: TrackProps) => {
+const Track = ({ trackId, title, artist, coverUrl }: TrackProps) => {
+    const { selectedTrackId, setSelectedTrackId } = useTrack();
+    const isActive = selectedTrackId === trackId;
+
     return (
-        <div className={styles.card}>
+        <div
+            className={`${styles.card} ${isActive ? styles.active : ""}`}
+            onClick={() => setSelectedTrackId(trackId)}
+            role="button"
+            onKeyDown={(e) => e.key === "Enter" && setSelectedTrackId(trackId)}
+            aria-pressed={isActive}
+        >
             {/* Album Cover */}
             <div className={styles.coverWrapper}>
                 <img
@@ -12,9 +22,11 @@ const Track = ({ title, artist, coverUrl }: TrackProps) => {
                     className={styles.coverImage}
                 />
 
-                {/* Vertical Label */}
-                <div className={styles.verticalLabel}>
-                    RELATED TRACKS
+                {/* Play overlay shown on hover or when active */}
+                <div className={styles.playOverlay}>
+                    <svg viewBox="0 0 24 24" fill="currentColor" className={styles.playIcon}>
+                        <path d="M8 5v14l11-7z" />
+                    </svg>
                 </div>
             </div>
 

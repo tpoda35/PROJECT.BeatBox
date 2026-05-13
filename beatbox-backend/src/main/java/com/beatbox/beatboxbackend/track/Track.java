@@ -9,8 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "tracks")
 public class Track {
 
     @Id
@@ -44,7 +46,10 @@ public class Track {
 
     @Column(updatable = false)
     @CreationTimestamp
-    private OffsetDateTime uploadedAt;
+    private Instant uploadedAt;
+
+    @UpdateTimestamp
+    private Instant modifiedAt;
 
     @Version
     private Long version;

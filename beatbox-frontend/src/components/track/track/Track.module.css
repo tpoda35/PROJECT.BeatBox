@@ -3,6 +3,14 @@
     overflow: hidden;
     position: relative;
     flex: 1 1 160px;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 0 0 2px var(--border-color-1);
+}
+
+.active {
+    box-shadow: 0 0 0 2px var(--panel-2);
 }
 
 .coverWrapper {
@@ -14,24 +22,34 @@
     height: 165px;
     object-fit: cover;
     display: block;
+    transition: filter 0.2s ease;
 }
 
-.verticalLabel {
+.card:hover .coverImage,
+.active .coverImage {
+    filter: brightness(0.75);
+}
+
+.playOverlay {
     position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    width: 32px;
-    background: rgba(0, 0, 0, 0.65);
+    inset: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.85);
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.card:hover .playOverlay,
+.active .playOverlay {
+    opacity: 1;
+}
+
+.playIcon {
+    width: 40px;
+    height: 40px;
+    color: #fff;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
 }
 
 .info {
@@ -48,8 +66,8 @@
 }
 
 .artist {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.65);
+    font-size: .7rem;
+    color: var(--text-muted-3);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

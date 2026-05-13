@@ -1,11 +1,10 @@
-import * as React from "react";
-import {createContext, useContext,} from "react";
+import {createContext, type ReactNode, useContext,} from "react";
 import {useKeycloak} from "./useKeyCloak.ts";
 import type {AuthContextType} from "./types/AuthContextType.ts";
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const keycloakData = useKeycloak();
 
     return (

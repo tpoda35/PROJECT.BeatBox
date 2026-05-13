@@ -36,8 +36,8 @@ public class Follow {
     @JoinColumn(name = "following_id")
     private AppUser following;
 
-    @CreationTimestamp
     @Column(updatable = false)
-    private Instant createdAt;
+    @CreationTimestamp
+    private Instant followedAt;
 
 }
