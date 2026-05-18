@@ -6,10 +6,11 @@ import java.util.List;
 
 public class TrackMapper {
 
-    public static Track createTrack(String title, String fileName, List<AppUser> artists) {
+    public static Track createTrack(String title, String fileName, String mimeType, List<AppUser> artists) {
         return Track.builder()
                 .title(title)
                 .fileName(fileName)
+                .mimeType(mimeType)
                 .artists(artists)
                 .build();
     }

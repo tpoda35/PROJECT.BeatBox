@@ -21,7 +21,7 @@ export default function TrackPlayer({ url }: { url: string }) {
             height: 35,
             barWidth: 2,
             barGap: 2,
-            fillParent: true
+            fillParent: true,
         });
 
         wavesurferRef.current.load(url);
@@ -36,14 +36,13 @@ export default function TrackPlayer({ url }: { url: string }) {
     }, [url]);
 
     const togglePlay = () => {
-        if (!wavesurferRef.current) return;
-        wavesurferRef.current.playPause();
+        wavesurferRef.current?.playPause();
     };
 
     return (
         <div className={styles.container}>
             <button onClick={togglePlay} className={styles.playButton}>
-                {isPlaying ? <IconPlayerPauseFilled size={20} /> :  <IconPlayerPlayFilled size={20} />}
+                {isPlaying ? <IconPlayerPauseFilled size={20} /> : <IconPlayerPlayFilled size={20} />}
             </button>
 
             <div className={styles.waveformWrapper}>

@@ -44,6 +44,9 @@ public class Track {
     )
     private List<AppUser> artists;
 
+    @Column(length = 127)
+    private String mimeType;
+
     @Column(updatable = false)
     @CreationTimestamp
     private Instant uploadedAt;

@@ -3,6 +3,7 @@ package com.beatbox.beatboxbackend.track;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +39,14 @@ public class TrackController {
     @GetMapping
     public List<TrackDto> getTracks() {
         return trackService.getTracks();
-    } 
+    }
+
+    @GetMapping("/history")
+    public Page<TrackDto> getHistory(
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "3") int pageSize
+    ) {
+        return trackService.getHistory(pageNum, pageSize);
+    }
 
 }
