@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
 import com.beatbox.beatboxbackend.follow.Follow;
+import com.beatbox.beatboxbackend.listeningHistory.ListeningHistory;
 import com.beatbox.beatboxbackend.track.Track;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,12 @@ public class AppUser {
 
     @OneToMany(mappedBy = "following", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers = new ArrayList<>();
+
+    // History
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ListeningHistory> listeningHistory;
+
+    // Likes
 
     @CreationTimestamp
     @Column(updatable = false)

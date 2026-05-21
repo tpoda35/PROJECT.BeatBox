@@ -2,6 +2,7 @@ package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
+import com.beatbox.beatboxbackend.listeningHistory.ListeningHistoryService;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class TracksServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
+    private final ListeningHistoryService listeningHistoryService;
 
     private static final String CACHE_CONTROL_VALUE = "public, max-age=86400";
 
@@ -182,6 +184,10 @@ public class TracksServiceImpl implements TrackService {
             // Axios usually downloads the whole file at once
             region = new ResourceRegion(resource, 0, contentLength);
             status = HttpStatus.OK;
+
+            // Save it to listening history, to be able to track it
+            appUserService.getLoggedInUserOptional()
+                    .ifPresent(appUser -> listeningHistoryService.addToListeningHistory(appUser, track));
         } else {
             // Partial content request:
             // return only the requested byte range
@@ -265,20 +271,7 @@ public class TracksServiceImpl implements TrackService {
     public List<TrackDto> getTracks() {
         return trackRepository.findAllWithArtists()
                 .stream()
-                .map(t -> new TrackDto(
-                        t.getId(),
-                        t.getTitle(),
-                        t.getArtists()
-                                .stream()
-                                .map(AppUser::getPreferredUsername)
-                                .toList()
-                ))
+                .map(TrackMapper::toTrackDto)
                 .toList();
     }
-
-    @Override
-    public Page<TrackDto> getHistory(int pageNum, int pageSize) {
-        return null;
-    }
-
 }

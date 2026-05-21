@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
+import com.beatbox.beatboxbackend.auth.exception.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +28,7 @@ public class AppUserServiceImpl implements AppUserService {
     @Override
     public AppUser getLoggedInUser() {
         UUID userId = getUserIdFromContextHolder()
-                .orElseThrow(() -> new AuthorizationDeniedException("Unauthorized, log in again."));
+                .orElseThrow(AuthException::new);
         return findAppUser(userId);
     }
 
@@ -35,6 +36,12 @@ public class AppUserServiceImpl implements AppUserService {
     public Optional<AppUser> getLoggedInUserOptional() {
         return getUserIdFromContextHolder()
                 .flatMap(appUserRepository::findByKeycloakId);
+    }
+
+    @Override
+    public UUID getLoggedInUserId() {
+        return getUserIdFromContextHolder()
+                .orElseThrow(AuthException::new);
     }
 
     @Transactional

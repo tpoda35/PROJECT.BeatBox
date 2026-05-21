@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
+import com.beatbox.beatboxbackend.track.dto.TrackDto;
 
 import java.util.List;
 
@@ -13,6 +14,17 @@ public class TrackMapper {
                 .mimeType(mimeType)
                 .artists(artists)
                 .build();
+    }
+
+    public static TrackDto toTrackDto(Track track) {
+        return new TrackDto(
+                track.getId(),
+                track.getTitle(),
+                track.getArtists()
+                        .stream()
+                        .map(AppUser::getPreferredUsername)
+                        .toList()
+        );
     }
 
 }

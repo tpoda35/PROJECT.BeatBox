@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.exception;
 
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
+import com.beatbox.beatboxbackend.auth.exception.AuthException;
 import com.beatbox.beatboxbackend.follow.exception.AlreadyFollowingException;
 import com.beatbox.beatboxbackend.follow.exception.NotFollowingException;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
@@ -20,11 +21,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    // Auth exceptions
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ExceptionDto> handleAuthException(AuthException ex) {
+        return ResponseEntity.status(UNAUTHORIZED).body(
+                new ExceptionDto(
+                        ex.getMessage(),
+                        OffsetDateTime.now(),
+                        UNAUTHORIZED.value()
+                )
+        );
+    }
 
     // Follow exceptions
     @ExceptionHandler(NotFollowingException.class)

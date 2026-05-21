@@ -4,12 +4,14 @@ import ArtistListItem from "../artist/artistListItem/ArtistListItem.tsx";
 import TrackListItem from "../track/trackListItem/TrackListItem.tsx";
 import {useSharedApi} from "../../api/ApiContext.tsx";
 import {useEffect, useState} from "react";
-import type {ArtistDto} from "./apiDto/ArtistDto.ts";
+import type { ArtistDto } from "./apiDto/ArtistDto.ts";
+import type {ListeningHistoryDto} from "./apiDto/ListeningHistoryDto.ts";
 
 const Sidebar = () => {
     const api = useSharedApi();
 
     const [artists, setArtists] = useState<ArtistDto[]>([]);
+    const [listeningHistory, setListeningHistory] = useState<ListeningHistoryDto[]>([]);
 
     useEffect(() => {
         const fetchArtists = async () => {
@@ -21,6 +23,16 @@ const Sidebar = () => {
             }
         };
 
+        const fetchListeningHistory = async () => {
+            try {
+                const result = await api.get<{ content: ListeningHistoryDto[] }>("/tracks/history");
+                setListeningHistory(result.content);
+            } catch (err) {
+                console.error("Failed to fetch listening history", err);
+            }
+        };
+
+        fetchListeningHistory()
         fetchArtists();
     }, [api]);
 
@@ -72,35 +84,47 @@ const Sidebar = () => {
             </SidebarSection>
 
             <SidebarSection title="LISTENING HISTORY">
-                <TrackListItem
-                    artist="Holy Priest, Bloodlust"
-                    title="Bloodlust & Holy Priest - Hit The Floor"
-                    coverUrl="/pb.jpg"
-                    plays={2370000}
-                    likes={50900}
-                    reposts={1473}
-                    comments={298}
-                />
+                {listeningHistory.map((entry) => (
+                    <TrackListItem
+                        key={entry.trackDto.trackId}
+                        artist={entry.trackDto.artists.join(", ")}
+                        title={entry.trackDto.title}
+                        coverUrl="/pb.jpg"
+                        plays={0}
+                        likes={0}
+                        reposts={0}
+                        comments={0}
+                    />
+                ))}
+                {/*<TrackListItem*/}
+                {/*    artist="Holy Priest, Bloodlust"*/}
+                {/*    title="Bloodlust & Holy Priest - Hit The Floor"*/}
+                {/*    coverUrl="/pb.jpg"*/}
+                {/*    plays={2370000}*/}
+                {/*    likes={50900}*/}
+                {/*    reposts={1473}*/}
+                {/*    comments={298}*/}
+                {/*/>*/}
 
-                <TrackListItem
-                    artist="Holy Priest, Manji"
-                    title="Holy Priest & Manji - No Balance"
-                    coverUrl="/pb.jpg"
-                    plays={2750000}
-                    likes={60600}
-                    reposts={534}
-                    comments={372}
-                />
+                {/*<TrackListItem*/}
+                {/*    artist="Holy Priest, Manji"*/}
+                {/*    title="Holy Priest & Manji - No Balance"*/}
+                {/*    coverUrl="/pb.jpg"*/}
+                {/*    plays={2750000}*/}
+                {/*    likes={60600}*/}
+                {/*    reposts={534}*/}
+                {/*    comments={372}*/}
+                {/*/>*/}
 
-                <TrackListItem
-                    artist="Madmize"
-                    title="Warface - Mashup 6.0 (Madmize Kick Edit)"
-                    coverUrl="/pb.jpg"
-                    plays={708000}
-                    likes={201000}
-                    reposts={1937}
-                    comments={2036}
-                />
+                {/*<TrackListItem*/}
+                {/*    artist="Madmize"*/}
+                {/*    title="Warface - Mashup 6.0 (Madmize Kick Edit)"*/}
+                {/*    coverUrl="/pb.jpg"*/}
+                {/*    plays={708000}*/}
+                {/*    likes={201000}*/}
+                {/*    reposts={1937}*/}
+                {/*    comments={2036}*/}
+                {/*/>*/}
             </SidebarSection>
 
             <SidebarSection title="LIKES">
