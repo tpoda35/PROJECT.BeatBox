@@ -1,11 +1,11 @@
 package com.beatbox.beatboxbackend.listeningHistory;
 
-import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.listeningHistory.dto.ListeningHistoryDto;
-import com.beatbox.beatboxbackend.track.Track;
 import org.springframework.data.domain.Page;
 
+import java.util.UUID;
+
 public interface ListeningHistoryService {
-    void addToListeningHistory(AppUser appUser, Track track);
+    void addToListeningHistory(UUID trackId);
     Page<ListeningHistoryDto> getListeningHistory(int pageNum, int pageSize);
 }

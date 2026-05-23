@@ -13,6 +13,8 @@ const Sidebar = () => {
     const [artists, setArtists] = useState<ArtistDto[]>([]);
     const [listeningHistory, setListeningHistory] = useState<ListeningHistoryDto[]>([]);
 
+    console.log('listeningHistory', listeningHistory);
+
     useEffect(() => {
         const fetchArtists = async () => {
             try {

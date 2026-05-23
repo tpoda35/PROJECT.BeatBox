@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
-import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,6 @@ public class TracksServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
-    private final ListeningHistoryService listeningHistoryService;
 
     private static final String CACHE_CONTROL_VALUE = "public, max-age=86400";
 
@@ -184,10 +182,6 @@ public class TracksServiceImpl implements TrackService {
             // Axios usually downloads the whole file at once
             region = new ResourceRegion(resource, 0, contentLength);
             status = HttpStatus.OK;
-
-            // Save it to listening history, to be able to track it
-            appUserService.getLoggedInUserOptional()
-                    .ifPresent(appUser -> listeningHistoryService.addToListeningHistory(appUser, track));
         } else {
             // Partial content request:
             // return only the requested byte range

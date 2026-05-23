@@ -3,10 +3,9 @@ package com.beatbox.beatboxbackend.listeningHistory;
 import com.beatbox.beatboxbackend.listeningHistory.dto.ListeningHistoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/tracks/history")
@@ -14,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ListeningHistoryController {
 
     private final ListeningHistoryService listeningHistoryService;
+
+    @PostMapping("/{trackId}")
+    public void recordPlay(@PathVariable UUID trackId) {
+        listeningHistoryService.addToListeningHistory(trackId);
+    }
 
     @GetMapping
     public Page<ListeningHistoryDto> getListeningHistory(
