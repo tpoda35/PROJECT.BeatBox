@@ -5,7 +5,6 @@ import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.listeningHistory.dto.ListeningHistoryDto;
 import com.beatbox.beatboxbackend.track.Track;
 import com.beatbox.beatboxbackend.track.TrackRepository;
-import com.beatbox.beatboxbackend.track.TrackService;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +45,7 @@ public class ListeningHistoryServiceImpl implements ListeningHistoryService {
         }
     }
 
+    @Transactional
     @Override
     public Page<ListeningHistoryDto> getListeningHistory(int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "listenedAt"));

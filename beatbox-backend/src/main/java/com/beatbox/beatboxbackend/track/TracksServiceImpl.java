@@ -2,7 +2,6 @@ package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
-import com.beatbox.beatboxbackend.listeningHistory.ListeningHistoryService;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.RequiredArgsConstructor;

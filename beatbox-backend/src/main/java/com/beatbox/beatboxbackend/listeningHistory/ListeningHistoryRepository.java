@@ -11,7 +11,8 @@ import java.util.UUID;
 @Repository
 public interface ListeningHistoryRepository extends JpaRepository<ListeningHistory, UUID> {
 
-    @EntityGraph(attributePaths = {"track", "track.artists"})
+    // track.artists should be eagerly loaded, but there was a duplicate problem
+    @EntityGraph(attributePaths = {"track"})
     Page<ListeningHistory> getAllByUser_Id(UUID userId, Pageable pageable);
 
 }
