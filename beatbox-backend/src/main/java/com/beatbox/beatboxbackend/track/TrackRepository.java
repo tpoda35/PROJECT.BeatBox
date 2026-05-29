@@ -16,4 +16,12 @@ public interface TrackRepository extends JpaRepository<Track, UUID> {
         JOIN FETCH t.artists
     """)
     List<Track> findAllWithArtists();
+
+    @Query("""
+        SELECT t.id, COUNT(l)
+        FROM Track t
+        LEFT JOIN t.likes l
+        GROUP BY t.id
+    """)
+    List<Object[]> findLikeCountsPerTrack();
 }

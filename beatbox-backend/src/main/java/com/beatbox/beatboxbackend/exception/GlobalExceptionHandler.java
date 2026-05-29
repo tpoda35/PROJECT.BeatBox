@@ -2,8 +2,8 @@ package com.beatbox.beatboxbackend.exception;
 
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.exception.AuthException;
-import com.beatbox.beatboxbackend.follow.exception.AlreadyFollowingException;
-import com.beatbox.beatboxbackend.follow.exception.NotFollowingException;
+import com.beatbox.beatboxbackend.auth.appUser.follow.exception.AlreadyFollowingException;
+import com.beatbox.beatboxbackend.auth.appUser.follow.exception.NotFollowingException;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import lombok.NonNull;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

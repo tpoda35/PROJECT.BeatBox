@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.follow;
+package com.beatbox.beatboxbackend.auth.appUser.follow;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import jakarta.persistence.*;
@@ -36,8 +36,8 @@ public class Follow {
     @JoinColumn(name = "following_id")
     private AppUser following;
 
-    @Column(updatable = false)
     @CreationTimestamp
-    private Instant followedAt;
+    @Column(updatable = false)
+    private Instant createdAt;
 
 }

@@ -1,6 +1,6 @@
-package com.beatbox.beatboxbackend.listeningHistory;
+package com.beatbox.beatboxbackend.auth.appUser.listeningHistory;
 
-import com.beatbox.beatboxbackend.listeningHistory.dto.ListeningHistoryDto;
+import com.beatbox.beatboxbackend.auth.appUser.listeningHistory.dto.ListeningHistoryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;

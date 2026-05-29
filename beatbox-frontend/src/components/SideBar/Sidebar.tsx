@@ -4,7 +4,7 @@ import ArtistListItem from "../artist/artistListItem/ArtistListItem.tsx";
 import TrackListItem from "../track/trackListItem/TrackListItem.tsx";
 import {useSharedApi} from "../../api/ApiContext.tsx";
 import {useEffect, useState} from "react";
-import type { ArtistDto } from "./apiDto/ArtistDto.ts";
+import type {ArtistDto} from "./apiDto/ArtistDto.ts";
 import type {ListeningHistoryDto} from "./apiDto/ListeningHistoryDto.ts";
 
 const Sidebar = () => {
@@ -68,6 +68,39 @@ const Sidebar = () => {
         }
     };
 
+    const handleLikeToggle = async (trackId: string) => {
+        const track = listeningHistory.find(e => e.trackDto.trackId === trackId);
+        if (!track) return;
+
+        const isLiked = track.trackDto.isLiked;
+
+        try {
+            if (isLiked) {
+                await api.delete(`/tracks/${trackId}/like`);
+            } else {
+                await api.post(`/tracks/${trackId}/like`);
+            }
+
+            // update UI after success
+            setListeningHistory(prev =>
+                prev.map(e =>
+                    e.trackDto.trackId === trackId
+                        ? {
+                            ...e,
+                            trackDto: {
+                                ...e.trackDto,
+                                isLiked: !isLiked,
+                                likeCount: e.trackDto.likeCount + (isLiked ? -1 : 1)
+                            }
+                        }
+                        : e
+                )
+            );
+        } catch (err) {
+            console.error("Failed to toggle like", err);
+        }
+    };
+
     return (
         <aside className={styles.container}>
             <SidebarSection title="RECOMMENDED ARTISTS">
@@ -93,40 +126,12 @@ const Sidebar = () => {
                         title={entry.trackDto.title}
                         coverUrl="/pb.jpg"
                         plays={0}
-                        likes={0}
+                        likes={entry.trackDto.likeCount}
                         reposts={0}
                         comments={0}
+                        onLike={() => handleLikeToggle(entry.trackDto.trackId)}
                     />
                 ))}
-                {/*<TrackListItem*/}
-                {/*    artist="Holy Priest, Bloodlust"*/}
-                {/*    title="Bloodlust & Holy Priest - Hit The Floor"*/}
-                {/*    coverUrl="/pb.jpg"*/}
-                {/*    plays={2370000}*/}
-                {/*    likes={50900}*/}
-                {/*    reposts={1473}*/}
-                {/*    comments={298}*/}
-                {/*/>*/}
-
-                {/*<TrackListItem*/}
-                {/*    artist="Holy Priest, Manji"*/}
-                {/*    title="Holy Priest & Manji - No Balance"*/}
-                {/*    coverUrl="/pb.jpg"*/}
-                {/*    plays={2750000}*/}
-                {/*    likes={60600}*/}
-                {/*    reposts={534}*/}
-                {/*    comments={372}*/}
-                {/*/>*/}
-
-                {/*<TrackListItem*/}
-                {/*    artist="Madmize"*/}
-                {/*    title="Warface - Mashup 6.0 (Madmize Kick Edit)"*/}
-                {/*    coverUrl="/pb.jpg"*/}
-                {/*    plays={708000}*/}
-                {/*    likes={201000}*/}
-                {/*    reposts={1937}*/}
-                {/*    comments={2036}*/}
-                {/*/>*/}
             </SidebarSection>
 
             <SidebarSection title="LIKES">

@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.follow;
+package com.beatbox.beatboxbackend.auth.appUser.follow;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 

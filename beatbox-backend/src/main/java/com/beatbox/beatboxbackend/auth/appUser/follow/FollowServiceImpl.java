@@ -1,10 +1,10 @@
-package com.beatbox.beatboxbackend.follow;
+package com.beatbox.beatboxbackend.auth.appUser.follow;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserRepository;
-import com.beatbox.beatboxbackend.follow.exception.AlreadyFollowingException;
-import com.beatbox.beatboxbackend.follow.exception.NotFollowingException;
+import com.beatbox.beatboxbackend.auth.appUser.follow.exception.AlreadyFollowingException;
+import com.beatbox.beatboxbackend.auth.appUser.follow.exception.NotFollowingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 
-import static com.beatbox.beatboxbackend.follow.FollowMapper.createFollow;
+import static com.beatbox.beatboxbackend.auth.appUser.follow.FollowMapper.createFollow;
 
 @Service
 @RequiredArgsConstructor

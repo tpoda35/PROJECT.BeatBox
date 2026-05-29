@@ -4,6 +4,8 @@ import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +26,8 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.beatbox.beatboxbackend.track.TrackMapper.createTrack;
 
@@ -36,6 +38,7 @@ public class TracksServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
+    private final TrackLikeRepository trackLikeRepository;
 
     private static final String CACHE_CONTROL_VALUE = "public, max-age=86400";
 
@@ -81,8 +84,7 @@ public class TracksServiceImpl implements TrackService {
     public ResponseEntity<ResourceRegion> streamTrack(UUID trackId, HttpHeaders headers)
             throws IOException {
 
-        Track track = trackRepository.findById(trackId)
-                .orElseThrow(TrackNotFoundException::new);
+        Track track = findTrack(trackId);
 
         // Resolve the physical file path on disk using the stored filename
         Path path = Paths.get(audioUploadDir, track.getFileName());
@@ -260,11 +262,47 @@ public class TracksServiceImpl implements TrackService {
         return (probed != null) ? probed : "application/octet-stream"; // == "generic binary data"
     }
 
+    // Optimize it: pagination + add recommendation algorithm + cache
     @Override
     public List<TrackDto> getTracks() {
-        return trackRepository.findAllWithArtists()
+        List<Track> tracks = trackRepository.findAllWithArtists();
+
+        Map<UUID, Long> likeCountById = trackRepository.findLikeCountsPerTrack()
                 .stream()
-                .map(TrackMapper::toTrackDto)
+                .collect(Collectors.toMap(
+                        row -> (UUID) row[0],
+                        row -> (Long) row[1]
+                ));
+
+        Optional<AppUser> loggedInUser = appUserService.getLoggedInUserOptional();
+
+        if (loggedInUser.isPresent()) {
+            Set<UUID> trackIds = tracks.stream()
+                    .map(Track::getId)
+                    .collect(Collectors.toSet());
+
+            Set<UUID> likedTrackIds = trackLikeRepository
+                    .findLikedTrackIdsByUserAndTrackIds(loggedInUser.get(), trackIds);
+
+            return tracks.stream()
+                    .map(track -> TrackMapper.toTrackDto(
+                            track,
+                            likeCountById.getOrDefault(track.getId(), 0L),
+                            likedTrackIds.contains(track.getId())
+                    ))
+                    .toList();
+        }
+
+        return tracks.stream()
+                .map(track -> TrackMapper.toTrackDto(
+                        track,
+                        likeCountById.getOrDefault(track.getId(), 0L)
+                ))
                 .toList();
+    }
+
+    private Track findTrack(UUID trackId) {
+        return trackRepository.findById(trackId)
+                .orElseThrow(TrackNotFoundException::new);
     }
 }

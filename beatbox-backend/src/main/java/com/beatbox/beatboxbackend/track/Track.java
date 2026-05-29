@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.track;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLike;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -12,8 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -36,6 +36,7 @@ public class Track {
     @Column(unique = true)
     private String fileName;
 
+    // TODO: Consider using set instead of list.
     @ManyToMany
     @JoinTable(
             name = "track_artists",
@@ -44,12 +45,15 @@ public class Track {
     )
     private List<AppUser> artists;
 
+    @OneToMany(mappedBy = "track", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TrackLike> likes = new ArrayList<>();
+
     @Column(length = 127)
     private String mimeType;
 
-    @Column(updatable = false)
     @CreationTimestamp
-    private Instant uploadedAt;
+    @Column(updatable = false)
+    private Instant createdAt;
 
     @UpdateTimestamp
     private Instant modifiedAt;

@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.follow.exception;
+package com.beatbox.beatboxbackend.auth.appUser.follow.exception;
 
 public class NotFollowingException extends RuntimeException {
     public NotFollowingException() {

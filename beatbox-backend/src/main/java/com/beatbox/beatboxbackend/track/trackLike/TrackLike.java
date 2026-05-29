@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.listeningHistory;
+package com.beatbox.beatboxbackend.track.trackLike;
 
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.track.Track;
@@ -17,20 +17,30 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "listeningHistories")
-public class ListeningHistory {
+@Table(
+        name = "track_likes",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"user_id", "track_id"}
+                )
+        }
+)
+public class TrackLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
     private AppUser user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "track_id")
     private Track track;
 
     @CreationTimestamp
-    private Instant listenedAt;
+    @Column(updatable = false)
+    private Instant createdAt;
 
 }

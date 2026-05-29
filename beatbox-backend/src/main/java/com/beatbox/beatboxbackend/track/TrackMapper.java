@@ -16,15 +16,29 @@ public class TrackMapper {
                 .build();
     }
 
-    public static TrackDto toTrackDto(Track track) {
+    public static TrackDto toTrackDto(Track track, Long likeCount) {
         return new TrackDto(
                 track.getId(),
                 track.getTitle(),
                 track.getArtists()
                         .stream()
                         .map(AppUser::getPreferredUsername)
-                        .toList()
+                        .toList(),
+                likeCount,
+                false
         );
     }
 
+    public static TrackDto toTrackDto(Track track, Long likeCount, Boolean isLiked) {
+        return new TrackDto(
+                track.getId(),
+                track.getTitle(),
+                track.getArtists()
+                        .stream()
+                        .map(AppUser::getPreferredUsername)
+                        .toList(),
+                likeCount,
+                isLiked
+        );
+    }
 }

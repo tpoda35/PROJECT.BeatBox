@@ -1,0 +1,4 @@
+How the frontend components built:
+    - TrackSection -> Track
+    - SidebarSection -> ArtistListItem/TrackListItem
+    - TrackPlayBar -> TrackPlayer

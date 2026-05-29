@@ -10,6 +10,7 @@ const TrackListItem = ({
                            likes,
                            reposts,
                            comments,
+                           onLike,
                        }: TrackListItemProps) => {
     const shortTitle = title.length > 25 ? title.slice(0, 25) + "..." : title;
 
@@ -32,6 +33,15 @@ const TrackListItem = ({
                     <span><IconMessageCircleFilled size={12}/> {comments.toLocaleString()}</span>
                 </div>
             </div>
+
+            {/* Hover like button */}
+            <button
+                className={styles.likeButton}
+                onClick={onLike}
+                aria-label="Like track"
+            >
+                <IconHeartFilled size={16} />
+            </button>
         </div>
     );
 };

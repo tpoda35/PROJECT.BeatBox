@@ -1,4 +1,4 @@
-import type {TrackSectionProps} from "./TrackSectionProps.ts";
+import type {TrackSectionProps} from "./types/TrackSectionProps.ts";
 import styles from './TrackSection.module.css';
 
 const TrackSection = ({ title, children }: TrackSectionProps) => {

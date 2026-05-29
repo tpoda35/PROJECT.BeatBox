@@ -10,6 +10,8 @@ const TrackBrowser = () => {
 
     const [tracks, setTracks] = useState<TrackDto[]>([]);
 
+    console.log('Tracks: ', tracks);
+
     useEffect(() => {
         const fetchTracks = async () => {
             try {

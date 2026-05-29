@@ -6,5 +6,9 @@ import java.util.UUID;
 public record TrackDto(
         UUID trackId,
         String title,
-        List<String> artists
+        List<String> artists,
+        Long likeCount,
+
+        // A state that the user isLiked the track or not
+        Boolean isLiked
 ) {}

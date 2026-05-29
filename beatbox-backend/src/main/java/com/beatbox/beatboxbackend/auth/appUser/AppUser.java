@@ -1,8 +1,9 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
-import com.beatbox.beatboxbackend.follow.Follow;
-import com.beatbox.beatboxbackend.listeningHistory.ListeningHistory;
+import com.beatbox.beatboxbackend.auth.appUser.follow.Follow;
+import com.beatbox.beatboxbackend.auth.appUser.listeningHistory.ListeningHistory;
 import com.beatbox.beatboxbackend.track.Track;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLike;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,9 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -54,6 +53,8 @@ public class AppUser {
     private List<ListeningHistory> listeningHistory;
 
     // Likes
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TrackLike> likedTracks = new ArrayList<>();
 
     @CreationTimestamp
     @Column(updatable = false)

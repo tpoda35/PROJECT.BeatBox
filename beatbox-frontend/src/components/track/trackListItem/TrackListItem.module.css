@@ -4,6 +4,7 @@
     padding: 10px 0;
     color: var(--text);
     align-items: flex-start;
+    position: relative;
 }
 
 .cover {
@@ -11,6 +12,7 @@
     height: 50px;
     border-radius: 4px;
     object-fit: cover;
+    flex-shrink: 0;
 }
 
 .info {
@@ -39,4 +41,33 @@
 .stats svg {
     position: relative;
     top: 2px;
+}
+
+.likeButton {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--text-muted-2);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+    padding: 0;
+}
+
+.trackListItem:hover .likeButton {
+    opacity: 1;
+}
+
+.likeButton:hover {
+    color: #e05c5c;
+    background: rgba(224, 92, 92, 0.1);
 }
