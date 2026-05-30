@@ -1,0 +1,20 @@
+:global(.swiper-button-prev),
+:global(.swiper-button-next) {
+    --swiper-navigation-size: 2rem;
+    --swiper-theme-color: var(--text);
+    --swiper-navigation-sides-offset: 10px;
+    transition: all 0.2s ease;
+    background-color: var(--panel-2);
+    border-radius: 50%;
+    opacity: 90%;
+}
+
+:global(.swiper-navigation-icon) {
+    width: unset !important;
+    height: unset !important;
+}
+
+:global(.swiper-button-prev:hover),
+:global(.swiper-button-next:hover) {
+    transform: scale(1.05);
+}

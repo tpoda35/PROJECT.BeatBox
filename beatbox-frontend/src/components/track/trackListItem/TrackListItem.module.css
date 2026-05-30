@@ -68,6 +68,10 @@
 }
 
 .likeButton:hover {
-    color: #e05c5c;
+    color: var(--accent);
     background: rgba(224, 92, 92, 0.1);
+}
+
+.likeButton.liked {
+    color: var(--accent);
 }

@@ -4,7 +4,6 @@ import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.auth.appUser.listeningHistory.dto.ListeningHistoryDto;
 import com.beatbox.beatboxbackend.track.Track;
-import com.beatbox.beatboxbackend.track.TrackMapper;
 import com.beatbox.beatboxbackend.track.TrackRepository;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
@@ -61,17 +60,18 @@ public class ListeningHistoryServiceImpl implements ListeningHistoryService {
         Page<ListeningHistory> page = listeningHistoryRepository
                 .getAllByUser_Id(loggedInUser.getId(), pageable);
 
-        Map<UUID, Long> likeCountById = listeningHistoryRepository
-                .findLikeCountsByUserId(loggedInUser.getId())
-                .stream()
-                .collect(Collectors.toMap(
-                        row -> (UUID) row[0],
-                        row -> (Long) row[1]
-                ));
-
         Set<UUID> pageTrackIds = page.getContent().stream()
                 .map(lh -> lh.getTrack().getId())
                 .collect(Collectors.toSet());
+
+        Map<UUID, Long> likeCountById = pageTrackIds.isEmpty() ? Map.of() :
+                trackRepository
+                        .findLikeCountsByTrackIds(pageTrackIds)
+                        .stream()
+                        .collect(Collectors.toMap(
+                                row -> (UUID) row[0],
+                                row -> (Long) row[1]
+                        ));
 
         Set<UUID> likedTrackIds = trackLikeRepository
                 .findLikedTrackIdsByUserAndTrackIds(loggedInUser, pageTrackIds);

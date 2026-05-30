@@ -6,9 +6,11 @@ import {useSharedApi} from "../../api/ApiContext.tsx";
 import {useEffect, useState} from "react";
 import type {ArtistDto} from "./apiDto/ArtistDto.ts";
 import type {ListeningHistoryDto} from "./apiDto/ListeningHistoryDto.ts";
+import {useSharedAuth} from "../../auth/AuthContext.tsx";
 
 const Sidebar = () => {
     const api = useSharedApi();
+    const auth = useSharedAuth();
 
     const [artists, setArtists] = useState<ArtistDto[]>([]);
     const [listeningHistory, setListeningHistory] = useState<ListeningHistoryDto[]>([]);
@@ -118,53 +120,60 @@ const Sidebar = () => {
                 ))}
             </SidebarSection>
 
-            <SidebarSection title="LISTENING HISTORY">
-                {listeningHistory.map((entry) => (
-                    <TrackListItem
-                        key={entry.trackDto.trackId}
-                        artist={entry.trackDto.artists.join(", ")}
-                        title={entry.trackDto.title}
-                        coverUrl="/pb.jpg"
-                        plays={0}
-                        likes={entry.trackDto.likeCount}
-                        reposts={0}
-                        comments={0}
-                        onLike={() => handleLikeToggle(entry.trackDto.trackId)}
-                    />
-                ))}
-            </SidebarSection>
+            {
+                auth.authenticated &&
+                    <>
+                        <SidebarSection title="LISTENING HISTORY">
+                            {listeningHistory.map((entry, index) => (
+                                <TrackListItem
+                                    key={`${entry.trackDto.trackId}-${index}`}
+                                    artist={entry.trackDto.artists.join(", ")}
+                                    title={entry.trackDto.title}
+                                    coverUrl="/pb.jpg"
+                                    plays={0}
+                                    likes={entry.trackDto.likeCount}
+                                    reposts={0}
+                                    comments={0}
+                                    isLiked={entry.trackDto.isLiked}
+                                    onLike={() => handleLikeToggle(entry.trackDto.trackId)}
+                                />
+                            ))}
+                        </SidebarSection>
 
-            <SidebarSection title="LIKES">
-                <TrackListItem
-                    artist="Holy Priest, Bloodlust"
-                    title="Bloodlust & Holy Priest - Hit The Floor"
-                    coverUrl="/pb.jpg"
-                    plays={2370000}
-                    likes={50900}
-                    reposts={1473}
-                    comments={298}
-                />
+                        <SidebarSection title="LIKES">
+                            <TrackListItem
+                                artist="Holy Priest, Bloodlust"
+                                title="Bloodlust & Holy Priest - Hit The Floor"
+                                coverUrl="/pb.jpg"
+                                plays={2370000}
+                                likes={50900}
+                                reposts={1473}
+                                comments={298}
+                            />
 
-                <TrackListItem
-                    artist="Holy Priest, Manji"
-                    title="Holy Priest & Manji - No Balance"
-                    coverUrl="/pb.jpg"
-                    plays={2750000}
-                    likes={60600}
-                    reposts={534}
-                    comments={372}
-                />
+                            <TrackListItem
+                                artist="Holy Priest, Manji"
+                                title="Holy Priest & Manji - No Balance"
+                                coverUrl="/pb.jpg"
+                                plays={2750000}
+                                likes={60600}
+                                reposts={534}
+                                comments={372}
+                            />
 
-                <TrackListItem
-                    artist="Madmize"
-                    title="Warface - Mashup 6.0 (Madmize Kick Edit)"
-                    coverUrl="/pb.jpg"
-                    plays={708000}
-                    likes={201000}
-                    reposts={1937}
-                    comments={2036}
-                />
-            </SidebarSection>
+                            <TrackListItem
+                                artist="Madmize"
+                                title="Warface - Mashup 6.0 (Madmize Kick Edit)"
+                                coverUrl="/pb.jpg"
+                                plays={708000}
+                                likes={201000}
+                                reposts={1937}
+                                comments={2036}
+                            />
+                        </SidebarSection>
+                    </>
+
+            }
         </aside>
     );
 };

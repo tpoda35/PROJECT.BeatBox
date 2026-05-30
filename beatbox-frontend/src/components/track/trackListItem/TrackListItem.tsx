@@ -10,6 +10,7 @@ const TrackListItem = ({
                            likes,
                            reposts,
                            comments,
+                           isLiked,
                            onLike,
                        }: TrackListItemProps) => {
     const shortTitle = title.length > 25 ? title.slice(0, 25) + "..." : title;
@@ -36,7 +37,7 @@ const TrackListItem = ({
 
             {/* Hover like button */}
             <button
-                className={styles.likeButton}
+                className={`${styles.likeButton} ${isLiked ? styles.liked : ""}`}
                 onClick={onLike}
                 aria-label="Like track"
             >

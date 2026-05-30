@@ -6,5 +6,6 @@ export type TrackListItemProps = {
     likes: number;
     reposts: number;
     comments: number;
+    isLiked: boolean;
     onLike?: () => void;
 };

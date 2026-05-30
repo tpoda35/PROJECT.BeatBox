@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Repository
@@ -24,4 +25,13 @@ public interface TrackRepository extends JpaRepository<Track, UUID> {
         GROUP BY t.id
     """)
     List<Object[]> findLikeCountsPerTrack();
+
+    @Query("""
+        SELECT t.id, COUNT(l)
+        FROM Track t
+        LEFT JOIN t.likes l
+        WHERE t.id IN :trackIds
+        GROUP BY t.id
+    """)
+    List<Object[]> findLikeCountsByTrackIds(Set<UUID> trackIds);
 }
