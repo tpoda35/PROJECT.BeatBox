@@ -4,4 +4,5 @@ export type TrackDto = {
     artists: string[];
     likeCount: number;
     isLiked: boolean;
+    viewCount: number;
 };

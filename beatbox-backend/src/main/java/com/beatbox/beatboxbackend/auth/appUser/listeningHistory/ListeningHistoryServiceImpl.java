@@ -33,7 +33,7 @@ public class ListeningHistoryServiceImpl implements ListeningHistoryService {
 
     @Transactional
     @Override
-    public void addToListeningHistory(UUID trackId) {
+    public void recordListeningHistory(UUID trackId) {
         AppUser appUser = appUserService.getLoggedInUserOptional()
                 .orElse(null);
 

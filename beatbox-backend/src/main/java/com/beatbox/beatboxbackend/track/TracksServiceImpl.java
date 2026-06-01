@@ -5,12 +5,12 @@ import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
 import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
-import com.beatbox.beatboxbackend.track.trackLike.TrackLikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.FileTime;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -39,8 +40,11 @@ public class TracksServiceImpl implements TrackService {
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
     private final TrackLikeRepository trackLikeRepository;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String CACHE_CONTROL_VALUE = "public, max-age=86400";
+
+    private static final Duration VIEW_RECORD_TTL = Duration.ofMinutes(30);
 
     @Value("${app.upload.audioDir}")
     private String audioUploadDir;
@@ -80,6 +84,7 @@ public class TracksServiceImpl implements TrackService {
         return track;
     }
 
+    @Transactional
     @Override
     public ResponseEntity<ResourceRegion> streamTrack(UUID trackId, HttpHeaders headers)
             throws IOException {
@@ -299,6 +304,32 @@ public class TracksServiceImpl implements TrackService {
                         likeCountById.getOrDefault(track.getId(), 0L)
                 ))
                 .toList();
+    }
+
+    @Transactional
+    @Override
+    public void recordView(UUID trackId) {
+        // Build a deduplication key unique to this user + track.
+        //
+        // Authenticated:  "view:track:{trackId}:user:{userId}"
+        // Anonymous:      view counting is skipped entirely
+        //                 (bots and unauthenticated clients can't inflate counts)
+        Optional<AppUser> loggedInUser = appUserService.getLoggedInUserOptional();
+        if (loggedInUser.isEmpty()) return;
+
+        String dedupKey = "view:track:" + trackId + ":user:" + loggedInUser.get().getId();
+
+        // setIfAbsent = SET ... NX EX — atomic in Redis.
+        //
+        // First call within TTL window  → key didn't exist → returns true  → count the view
+        // Subsequent calls within window → key already exists → returns false → skip
+        Boolean isFirstView = redisTemplate.opsForValue()
+                .setIfAbsent(dedupKey, "1", VIEW_RECORD_TTL);
+
+        // Better null handling if redis server is down
+        if (Boolean.TRUE.equals(isFirstView)) {
+            trackRepository.incrementViews(trackId);
+        }
     }
 
     private Track findTrack(UUID trackId) {

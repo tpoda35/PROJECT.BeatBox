@@ -48,6 +48,8 @@ public class Track {
     @OneToMany(mappedBy = "track", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TrackLike> likes = new ArrayList<>();
 
+    private Long views;
+
     @Column(length = 127)
     private String mimeType;
 
@@ -61,13 +63,8 @@ public class Track {
     @Version
     private Long version;
 
-    public void addArtist(AppUser artist) {
-        this.artists.add(artist);
-        artist.getTracks().add(this);
-    }
-
-    public void removeArtist(AppUser artist) {
-        this.artists.remove(artist);
-        artist.getTracks().remove(this);
+    @PrePersist
+    protected void init() {
+        views = 0L;
     }
 }

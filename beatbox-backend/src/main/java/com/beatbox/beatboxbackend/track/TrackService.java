@@ -14,4 +14,5 @@ public interface TrackService {
     Track uploadTrack(String title, MultipartFile file) throws IOException;
     ResponseEntity<ResourceRegion> streamTrack(UUID trackId, HttpHeaders headers) throws IOException;
     List<TrackDto> getTracks();
+    void recordView(UUID trackId);
 }

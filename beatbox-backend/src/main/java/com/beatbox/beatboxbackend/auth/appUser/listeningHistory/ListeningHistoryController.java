@@ -15,8 +15,8 @@ public class ListeningHistoryController {
     private final ListeningHistoryService listeningHistoryService;
 
     @PostMapping("/{trackId}")
-    public void addToListeningHistory(@PathVariable UUID trackId) {
-        listeningHistoryService.addToListeningHistory(trackId);
+    public void recordListeningHistory(@PathVariable UUID trackId) {
+        listeningHistoryService.recordListeningHistory(trackId);
     }
 
     @GetMapping

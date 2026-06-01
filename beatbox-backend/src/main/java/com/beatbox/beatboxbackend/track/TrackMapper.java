@@ -25,7 +25,8 @@ public class TrackMapper {
                         .map(AppUser::getPreferredUsername)
                         .toList(),
                 likeCount,
-                false
+                false,
+                track.getViews()
         );
     }
 
@@ -38,7 +39,8 @@ public class TrackMapper {
                         .map(AppUser::getPreferredUsername)
                         .toList(),
                 likeCount,
-                isLiked
+                isLiked,
+                track.getViews()
         );
     }
 }

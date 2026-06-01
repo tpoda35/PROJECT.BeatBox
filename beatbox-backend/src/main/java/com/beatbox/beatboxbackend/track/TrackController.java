@@ -39,4 +39,9 @@ public class TrackController {
     public List<TrackDto> getTracks() {
         return trackService.getTracks();
     }
+
+    @PostMapping("/{trackId}/view")
+    public void recordView(@PathVariable UUID trackId) {
+        trackService.recordView(trackId);
+    }
 }

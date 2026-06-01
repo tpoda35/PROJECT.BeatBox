@@ -1,6 +1,7 @@
 package com.beatbox.beatboxbackend.track;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -34,4 +35,8 @@ public interface TrackRepository extends JpaRepository<Track, UUID> {
         GROUP BY t.id
     """)
     List<Object[]> findLikeCountsByTrackIds(Set<UUID> trackIds);
+
+    @Modifying
+    @Query("UPDATE Track t SET t.views = t.views + 1 WHERE t.id = :trackId")
+    void incrementViews(UUID trackId);
 }

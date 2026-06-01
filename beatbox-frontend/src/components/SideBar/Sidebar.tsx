@@ -130,7 +130,7 @@ const Sidebar = () => {
                                     artist={entry.trackDto.artists.join(", ")}
                                     title={entry.trackDto.title}
                                     coverUrl="/pb.jpg"
-                                    plays={0}
+                                    plays={entry.trackDto.viewCount}
                                     likes={entry.trackDto.likeCount}
                                     reposts={0}
                                     comments={0}
