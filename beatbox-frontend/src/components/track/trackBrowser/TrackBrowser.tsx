@@ -38,6 +38,18 @@ const TrackBrowser = () => {
                     />
                 ))}
             </TrackSection>
+
+            <TrackSection title="Tracks 2">
+                {tracks.map((track) => (
+                    <Track
+                        key={track.trackId}
+                        trackId={track.trackId}
+                        title={track.title}
+                        artist={track.artists.join(", ")}
+                        coverUrl="https://picsum.photos/300/300?random=1"
+                    />
+                ))}
+            </TrackSection>
         </section>
     );
 };

@@ -4,7 +4,7 @@ import TrackSlider from "../trackSlider/TrackSlider.tsx";
 
 const TrackSection = ({ title, children }: TrackSectionProps) => {
     return (
-        <div className={styles.mainContainer}>
+        <div className={styles.container}>
             <h5 className={styles.title}>{title}</h5>
             <TrackSlider>
                 {children}

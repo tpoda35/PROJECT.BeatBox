@@ -267,7 +267,7 @@ public class TracksServiceImpl implements TrackService {
         return (probed != null) ? probed : "application/octet-stream"; // == "generic binary data"
     }
 
-    // Optimize it: pagination + add recommendation algorithm + cache
+    // TODO: Optimize it: pagination + add recommendation algorithm + cache
     @Override
     public List<TrackDto> getTracks() {
         List<Track> tracks = trackRepository.findAllWithArtists();
@@ -309,24 +309,20 @@ public class TracksServiceImpl implements TrackService {
     @Transactional
     @Override
     public void recordView(UUID trackId) {
-        // Build a deduplication key unique to this user + track.
-        //
+        // Build a deduplication key unique to this user + track
         // Authenticated:  "view:track:{trackId}:user:{userId}"
         // Anonymous:      view counting is skipped entirely
-        //                 (bots and unauthenticated clients can't inflate counts)
         Optional<AppUser> loggedInUser = appUserService.getLoggedInUserOptional();
         if (loggedInUser.isEmpty()) return;
 
         String dedupKey = "view:track:" + trackId + ":user:" + loggedInUser.get().getId();
 
-        // setIfAbsent = SET ... NX EX — atomic in Redis.
-        //
         // First call within TTL window  → key didn't exist → returns true  → count the view
         // Subsequent calls within window → key already exists → returns false → skip
         Boolean isFirstView = redisTemplate.opsForValue()
                 .setIfAbsent(dedupKey, "1", VIEW_RECORD_TTL);
 
-        // Better null handling if redis server is down
+        // Better null handling if redis server is down (Null issues)
         if (Boolean.TRUE.equals(isFirstView)) {
             trackRepository.incrementViews(trackId);
         }

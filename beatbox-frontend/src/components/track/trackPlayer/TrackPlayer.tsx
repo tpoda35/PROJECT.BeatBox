@@ -4,11 +4,7 @@ import styles from "./TrackPlayer.module.css";
 import {IconPlayerPauseFilled, IconPlayerPlayFilled, IconVolume} from "@tabler/icons-react";
 import RangeSlider from "../../reusable/rangeSlider/RangeSlider.tsx";
 import {useSharedApi} from "../../../api/ApiContext.tsx";
-
-interface TrackPlayerProps {
-    trackId: string;
-    url: string;
-}
+import type {TrackPlayerProps} from "./types/TrackPlayerProps.ts";
 
 export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
     const waveformRef = useRef<HTMLDivElement | null>(null);
@@ -23,6 +19,10 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
     const api = useSharedApi();
 
     useEffect(() => {
+        viewCountedRef.current = false;
+        listenedSecondsRef.current = 0;
+        lastTimeRef.current = null;
+
         if (!waveformRef.current) return;
 
         wavesurferRef.current = WaveSurfer.create({
@@ -33,16 +33,6 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
             barWidth: 2,
             barGap: 2,
             fillParent: true,
-
-            // KEY CHANGE: MediaElement backend uses a native <audio> element.
-            // This means WaveSurfer sends HTTP Range requests as the user listens,
-            // instead of downloading the entire file up front via Axios.
-            //
-            // Benefits:
-            // - Playback starts immediately (no waiting for full download)
-            // - Seeking works properly
-            // - Server observes real streaming behavior (used for view counting)
-            // - Memory efficient — only buffers what's needed
             backend: "MediaElement",
         });
 
@@ -58,18 +48,14 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
             lastTimeRef.current = null;
         });
 
-        // Accumulate real listened time on every timeupdate tick.
-        //
-        // Why not just check currentTime >= 30?
-        // Because a user could seek to 0:29 and get a free view count.
-        // Accumulating actual delta time is seek-proof.
+        // Accumulate real listened time on every timeupdate tick
         wavesurferRef.current.on("timeupdate", (currentTime: number) => {
             if (viewCountedRef.current) return;
 
             if (lastTimeRef.current !== null) {
                 const delta = currentTime - lastTimeRef.current;
 
-                // Only count forward deltas — ignore seeks backward
+                // Only count forward deltas, ignore seeks backward
                 if (delta > 0 && delta < 2) {
                     listenedSecondsRef.current += delta;
                 }
@@ -89,7 +75,7 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
         return () => {
             wavesurferRef.current?.destroy();
         };
-    }, [url]);
+    }, [trackId, url]);
 
     const togglePlay = () => {
         wavesurferRef.current?.playPause();

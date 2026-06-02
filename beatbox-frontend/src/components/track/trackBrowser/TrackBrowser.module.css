@@ -3,11 +3,6 @@
     flex-direction: column;
     margin-left: 50px;
 
+    flex: 1;
     min-width: 0;
-}
-
-@media (max-width: 938px) {
-    .container {
-        margin-left: 0;
-    }
 }

@@ -2,55 +2,21 @@ import {BrowserRouter, Route, Routes} from "react-router";
 import Home from "./pages/home/Home.tsx";
 import Layout from "./components/layout/Layout.tsx";
 import Upload from "./pages/upload/Upload.tsx";
+import Feed from "./pages/feed/Feed.tsx";
+
+// Global CSS imports
+import "./globalCss/Swiper.css"
 
 export default function App() {
-    // const { login, logout, register, authenticated, user } = useSharedAuth();
-
-    // const api = useSharedApi();
-    // const loadSomething = async () => {
-    //     const data = await api.get("/test");
-    //     console.log(data);
-    // };
-    //
-    // const uploadTrack = async () => {
-    //     const fileInput = document.createElement("input");
-    //     fileInput.type = "file";
-    //     fileInput.accept = "audio/*";
-    //
-    //     fileInput.onchange = async () => {
-    //         if (!fileInput.files || fileInput.files.length === 0) return;
-    //
-    //         const file = fileInput.files[0];
-    //
-    //         const formData = new FormData();
-    //         formData.append("title", file.name);
-    //         formData.append("file", file);
-    //
-    //         const result = await api.post("/tracks/upload", formData);
-    //
-    //         console.log("Uploaded:", result);
-    //     };
-    //
-    //     fileInput.click();
-    // };
-
     return (
-        <>
-            <BrowserRouter>
-                <Routes>
-                    <Route element={<Layout />}>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/upload" element={<Upload />} />
-                    </Route>
-                </Routes>
-            </BrowserRouter>
-
-                <>
-                    {/*<button onClick={logout}>Logout</button>*/}
-                    {/*<button onClick={loadSomething}>Call API</button>*/}
-                    {/*<button onClick={uploadTrack}>Upload Track</button>*/}
-                    {/*<TrackPlayer url="http://localhost:8090/api/tracks/stream/b3220121-cd81-434d-8e88-3eb222fabbe3" />*/}
-                </>
-        </>
+        <BrowserRouter>
+            <Routes>
+                <Route element={<Layout />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/upload" element={<Upload />} />
+                    <Route path="/feed" element={<Feed />} />
+                </Route>
+            </Routes>
+        </BrowserRouter>
     );
 }

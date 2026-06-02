@@ -1,0 +1,30 @@
+.swiper-button-prev,
+.swiper-button-next {
+    --swiper-navigation-size: 2rem;
+    --swiper-theme-color: var(--text);
+    --swiper-navigation-sides-offset: 10px;
+    transition: all 0.2s ease;
+    background-color: var(--panel-2);
+    border-radius: 50%;
+    opacity: 0.9;
+}
+
+.swiper-navigation-icon {
+    width: unset !important;
+    height: unset !important;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+    transform: scale(1.05);
+}
+
+.swiper-slide {
+    height: auto;
+    display: flex !important;
+}
+
+.swiper-slide > * {
+    width: 100%;
+    flex-shrink: 0;
+}
