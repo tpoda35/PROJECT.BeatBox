@@ -2,6 +2,7 @@
     display: flex;
     width: 100%;
     gap: 50px;
+    box-sizing: border-box;
 }
 
 /* LEFT SIDE - BOXES */
@@ -10,7 +11,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 1rem;
+    gap: 1.5rem;
+    flex: 1;
 }
 
 /* RIGHT SIDE - FORM */
@@ -20,4 +22,31 @@
     flex-direction: column;
     justify-content: center;
     gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 1rem;
+    }
+
+    .leftSide {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        width: 100%;
+        gap: 1rem;
+    }
+
+    .rightSide {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .leftSide {
+        flex-direction: column;
+        align-items: center;
+    }
 }
