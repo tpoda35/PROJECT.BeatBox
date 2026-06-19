@@ -7,6 +7,8 @@ import {useEffect, useState} from "react";
 import type {ArtistDto} from "./apiDto/ArtistDto.ts";
 import type {ListeningHistoryDto} from "./apiDto/ListeningHistoryDto.ts";
 import {useSharedAuth} from "../../auth/AuthContext.tsx";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Sidebar = () => {
     const api = useSharedApi();
@@ -65,10 +67,18 @@ const Sidebar = () => {
                         : a
                 )
             );
-        } catch (err) {
-            console.error("Failed to toggle follow", err);
+        } catch (err: unknown) {
+            if (axios.isAxiosError(err)) {
+                if (err.response?.status === 401) {
+                    toast.error("You need to be logged in to do this.");
+                } else {
+                    toast.error("Something went wrong.");
+                }
+            } else {
+                toast.error("Something went wrong.");
+            }
         }
-    };
+    }
 
     const handleLikeToggle = async (trackId: string) => {
         const track = listeningHistory.find(e => e.trackDto.trackId === trackId);

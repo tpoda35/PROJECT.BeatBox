@@ -35,7 +35,7 @@ export default class ApiService {
             return response.data;
         } catch (err: unknown) {
             console.error("API Request failed:", err);
-            throw new Error("Api request failed.");
+            throw err;
         }
     }
 

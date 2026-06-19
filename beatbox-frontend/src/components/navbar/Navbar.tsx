@@ -81,17 +81,22 @@ const Navbar = () => {
                         <>
                             <NavLink
                                 to="/profile"
-                                className={styles.profileBtn}
-                                onClick={closeMenu}
+                                className={styles.navAction}
                             >
-                                {user?.username ? user.username : "Profile"}
+                                {user?.username ?? "Profile"}
                             </NavLink>
 
-                            <NavLink to="/upload" className={getDesktopLinkClass}>
-                                <IconUpload />
+                            <NavLink
+                                to="/upload"
+                                className={styles.navActionAccent}
+                            >
+                                <IconUpload size={20} />
                             </NavLink>
 
-                            <button onClick={logout} className={styles.authBtn}>
+                            <button
+                                onClick={logout}
+                                className={styles.navActionAccent}
+                            >
                                 Logout
                             </button>
                         </>
