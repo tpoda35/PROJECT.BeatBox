@@ -1,16 +1,26 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
+import com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto;
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.exception.AuthException;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLikeMapper;
+import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
+import com.beatbox.beatboxbackend.track.trackLike.dto.TrackLikeCountPair;
+import com.beatbox.beatboxbackend.track.trackLike.dto.TrackLikeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +33,7 @@ import static com.beatbox.beatboxbackend.auth.appUser.AppUserMapper.createAppUse
 public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
+    private final TrackLikeRepository trackLikeRepository;
 
     @Override
     public AppUser getLoggedInUser() {
@@ -55,6 +66,54 @@ public class AppUserServiceImpl implements AppUserService {
         } catch (DataIntegrityViolationException e) {
             // Another request created the user in the meantime → safe to ignore
         }
+    }
+
+    @Override
+    public List<ArtistDto> getRecommendedArtists() {
+        AppUser loggedInUser = getLoggedInUserOptional()
+                .orElse(null);
+
+        UUID currentUserId = (loggedInUser != null) ? loggedInUser.getId() : null;
+
+//        TODO: implement recommendation logic
+//        if (appUserService.isLoggedIn()) {
+//            return getRecommendedForUser(appUserService.getLoggedInUser().getId());
+//        } else {
+//            return getRecommendedForGuest();
+//        }
+
+        int limit = 3;
+
+        List<AppUser> users = appUserRepository
+                .findAll(PageRequest.of(0, limit))
+                .getContent();
+
+        List<UUID> ids = users.stream()
+                .map(AppUser::getId)
+                .toList();
+
+        return appUserRepository.findArtistsWithStatsByIds(ids, currentUserId);
+    }
+
+    @Override
+    public Page<TrackLikeDto> getLikedTracks(int pageNum, int pageSize) {
+        AppUser loggedInUser = getLoggedInUserOptional()
+                .orElseThrow(AuthException::new);
+
+        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        Page<TrackLikeCountPair> pairsPage = trackLikeRepository.findLikedTracksWithCount(
+                loggedInUser,
+                pageable
+        );
+        
+        return pairsPage.map(pair ->
+                TrackLikeMapper.createTrackLikeDto(
+                        pair.trackLike(),
+                        pair.likeCount(),
+                        true
+                )
+        );
     }
 
     private Optional<Map<String, Object>> getClaimsFromJwt() {

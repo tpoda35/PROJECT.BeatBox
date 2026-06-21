@@ -309,13 +309,13 @@ public class TracksServiceImpl implements TrackService {
     @Transactional
     @Override
     public void recordView(UUID trackId) {
-        // Build a deduplication key unique to this user + track
-        // Authenticated:  "view:track:{trackId}:user:{userId}"
+        // Build a deduplication key unique to this user + trackLike
+        // Authenticated:  "view:trackLike:{trackId}:user:{userId}"
         // Anonymous:      view counting is skipped entirely
         Optional<AppUser> loggedInUser = appUserService.getLoggedInUserOptional();
         if (loggedInUser.isEmpty()) return;
 
-        String dedupKey = "view:track:" + trackId + ":user:" + loggedInUser.get().getId();
+        String dedupKey = "view:trackLike:" + trackId + ":user:" + loggedInUser.get().getId();
 
         // First call within TTL window  → key didn't exist → returns true  → count the view
         // Subsequent calls within window → key already exists → returns false → skip

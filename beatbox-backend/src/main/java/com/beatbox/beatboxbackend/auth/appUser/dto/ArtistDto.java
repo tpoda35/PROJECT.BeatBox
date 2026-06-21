@@ -1,4 +1,4 @@
-package com.beatbox.beatboxbackend.auth.appUser.artist.dto;
+package com.beatbox.beatboxbackend.auth.appUser.dto;
 
 import java.util.UUID;
 

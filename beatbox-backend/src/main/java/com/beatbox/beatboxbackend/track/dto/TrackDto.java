@@ -8,7 +8,7 @@ public record TrackDto(
         String title,
         List<String> artists,
         Long likeCount,
-        // A state that the user isLiked the track or not
+        // A state that the user isLiked the trackLike or not
         Boolean isLiked,
         Long viewCount
 ) {}

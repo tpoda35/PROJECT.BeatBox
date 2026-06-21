@@ -1,6 +1,6 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
-import com.beatbox.beatboxbackend.auth.appUser.artist.dto.ArtistDto;
+import com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,11 +16,8 @@ public interface AppUserRepository extends JpaRepository<AppUser, UUID> {
 
     boolean existsByKeycloakId(UUID keycloakId);
 
-    // Az a baj, hogy olyan helyen van használva a loggedInuser, ami public endpoint
-    // TODO: megoldani ezt a query-t, hogy akkor is menjen, ha nincs valaki belépve
-
     @Query("""
-        SELECT new com.beatbox.beatboxbackend.auth.appUser.artist.dto.ArtistDto(
+        SELECT new com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto(
             au.id,
             au.preferredUsername,
             COUNT(DISTINCT f.id),
