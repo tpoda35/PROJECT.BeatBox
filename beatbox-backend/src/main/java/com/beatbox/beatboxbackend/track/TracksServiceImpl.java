@@ -3,13 +3,16 @@ package com.beatbox.beatboxbackend.track;
 import com.beatbox.beatboxbackend.auth.appUser.AppUser;
 import com.beatbox.beatboxbackend.auth.appUser.AppUserService;
 import com.beatbox.beatboxbackend.track.dto.TrackDto;
+import com.beatbox.beatboxbackend.track.dto.projection.TrackRecommendationPair;
 import com.beatbox.beatboxbackend.track.exception.TrackNotFoundException;
-import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.ResourceRegion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -27,8 +30,9 @@ import java.nio.file.attribute.FileTime;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.beatbox.beatboxbackend.track.TrackMapper.createTrack;
 
@@ -39,7 +43,6 @@ public class TracksServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
     private final AppUserService appUserService;
-    private final TrackLikeRepository trackLikeRepository;
     private final RedisTemplate<String, Object> redisTemplate;
 
     private static final String CACHE_CONTROL_VALUE = "public, max-age=86400";
@@ -267,43 +270,28 @@ public class TracksServiceImpl implements TrackService {
         return (probed != null) ? probed : "application/octet-stream"; // == "generic binary data"
     }
 
-    // TODO: Optimize it: pagination + add recommendation algorithm + cache
+    // TODO: add recommendation algorithm + cache
     @Override
-    public List<TrackDto> getTracks() {
-        List<Track> tracks = trackRepository.findAllWithArtists();
-
-        Map<UUID, Long> likeCountById = trackRepository.findLikeCountsPerTrack()
-                .stream()
-                .collect(Collectors.toMap(
-                        row -> (UUID) row[0],
-                        row -> (Long) row[1]
-                ));
+    public Page<TrackDto> getRecommendedTracks(int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
 
         Optional<AppUser> loggedInUser = appUserService.getLoggedInUserOptional();
 
+        Page<TrackRecommendationPair> recommendationPage;
+
         if (loggedInUser.isPresent()) {
-            Set<UUID> trackIds = tracks.stream()
-                    .map(Track::getId)
-                    .collect(Collectors.toSet());
-
-            Set<UUID> likedTrackIds = trackLikeRepository
-                    .findLikedTrackIdsByUserAndTrackIds(loggedInUser.get(), trackIds);
-
-            return tracks.stream()
-                    .map(track -> TrackMapper.toTrackDto(
-                            track,
-                            likeCountById.getOrDefault(track.getId(), 0L),
-                            likedTrackIds.contains(track.getId())
-                    ))
-                    .toList();
+            recommendationPage = trackRepository.findRecommendationsForUser(loggedInUser.get(), pageable);
+        } else {
+            recommendationPage = trackRepository.findRecommendationsAnonymous(pageable);
         }
 
-        return tracks.stream()
-                .map(track -> TrackMapper.toTrackDto(
-                        track,
-                        likeCountById.getOrDefault(track.getId(), 0L)
-                ))
-                .toList();
+        return recommendationPage.map(pair ->
+                TrackMapper.toTrackDto(
+                        pair.track(),
+                        pair.likeCount(),
+                        pair.isLiked()
+                )
+        );
     }
 
     @Transactional

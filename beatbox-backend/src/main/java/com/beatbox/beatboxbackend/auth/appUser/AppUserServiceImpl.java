@@ -3,17 +3,11 @@ package com.beatbox.beatboxbackend.auth.appUser;
 import com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto;
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.exception.AuthException;
-import com.beatbox.beatboxbackend.track.trackLike.TrackLikeMapper;
 import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
-import com.beatbox.beatboxbackend.track.trackLike.dto.TrackLikeCountPair;
-import com.beatbox.beatboxbackend.track.trackLike.dto.TrackLikeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -93,27 +87,6 @@ public class AppUserServiceImpl implements AppUserService {
                 .toList();
 
         return appUserRepository.findArtistsWithStatsByIds(ids, currentUserId);
-    }
-
-    @Override
-    public Page<TrackLikeDto> getLikedTracks(int pageNum, int pageSize) {
-        AppUser loggedInUser = getLoggedInUserOptional()
-                .orElseThrow(AuthException::new);
-
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
-
-        Page<TrackLikeCountPair> pairsPage = trackLikeRepository.findLikedTracksWithCount(
-                loggedInUser,
-                pageable
-        );
-        
-        return pairsPage.map(pair ->
-                TrackLikeMapper.createTrackLikeDto(
-                        pair.trackLike(),
-                        pair.likeCount(),
-                        true
-                )
-        );
     }
 
     private Optional<Map<String, Object>> getClaimsFromJwt() {

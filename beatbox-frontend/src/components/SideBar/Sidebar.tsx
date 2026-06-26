@@ -29,7 +29,7 @@ const Sidebar = () => {
         const fetchListeningHistory = async () => {
             try {
                 // The content is set for the pagination, bcs the result.content has the actual data
-                const result = await api.get<{ content: ListeningHistoryDto[] }>("/tracks/history");
+                const result = await api.get<{ content: ListeningHistoryDto[] }>("/me/history");
                 setListeningHistory(result.content);
             } catch (err) {
                 console.error("Failed to fetch listening history", err);
@@ -72,9 +72,9 @@ const Sidebar = () => {
 
         try {
             if (isFollowing) {
-                await api.delete(`/follows/${artistId}`);
+                await api.delete(`/me/follows/${artistId}`);
             } else {
-                await api.post(`/follows/${artistId}`);
+                await api.post(`/me/follows/${artistId}`);
             }
 
             // update UI after success
@@ -103,19 +103,20 @@ const Sidebar = () => {
     }
 
     const handleLikeToggle = async (trackId: string) => {
-        const track = listeningHistory.find(e => e.trackDto.trackId === trackId);
-        if (!track) return;
+        const trackInHistory = listeningHistory.find(e => e.trackDto.trackId === trackId);
+        const trackInLiked = likedTracks.find(e => e.trackDto.trackId === trackId);
 
-        const isLiked = track.trackDto.isLiked;
+        if (!trackInHistory && !trackInLiked) return;
+
+        const isLiked = trackInHistory ? trackInHistory.trackDto.isLiked : true;
 
         try {
             if (isLiked) {
-                await api.delete(`/tracks/${trackId}/like`);
+                await api.delete(`/tracks/${trackId}/likes`);
             } else {
-                await api.post(`/tracks/${trackId}/like`);
+                await api.post(`/tracks/${trackId}/likes`);
             }
 
-            // update UI after success
             setListeningHistory(prev =>
                 prev.map(e =>
                     e.trackDto.trackId === trackId
@@ -130,8 +131,29 @@ const Sidebar = () => {
                         : e
                 )
             );
+
+            setLikedTracks(prev => {
+                if (isLiked) {
+                    return prev.filter(e => e.trackDto.trackId !== trackId);
+                } else {
+                    if (trackInHistory && !prev.some(e => e.trackDto.trackId === trackId)) {
+                        const newLikedEntry: LikedTracksDto = {
+                            ...trackInHistory,
+                            trackDto: {
+                                ...trackInHistory.trackDto,
+                                isLiked: true,
+                                likeCount: trackInHistory.trackDto.likeCount + 1
+                            }
+                        };
+                        return [newLikedEntry, ...prev];
+                    }
+                    return prev;
+                }
+            });
+
         } catch (err) {
             console.error("Failed to toggle like", err);
+            toast.error("Something went wrong.");
         }
     };
 

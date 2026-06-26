@@ -41,7 +41,7 @@ public class SecurityConfig {
             "/swagger-ui/**",
             "/swagger-ui.html",
 
-            "/api/tracks/stream/**",
+            "/api/tracks/*/stream",
             "/api/me/recommended-artists",
             "/api/tracks"
     };

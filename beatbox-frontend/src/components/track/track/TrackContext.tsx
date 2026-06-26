@@ -17,7 +17,7 @@ export const TrackProvider = ({ children }: { children: ReactNode }) => {
 
         const addToListeningHistory = async () => {
             try {
-                await api.post(`/tracks/history/${selectedTrackId}`)
+                await api.post(`/me/history/${selectedTrackId}`)
             } catch (err) {
                 console.error("Failed to add to listening history:", err);
             }

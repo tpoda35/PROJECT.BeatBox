@@ -37,7 +37,7 @@ const CustomToaster = () => {
 
     return (
         <Toaster
-            position={isMobile ? "top-center" : "top-left"}
+            position={isMobile ? "top-center" : "bottom-left"}
             toastOptions={{
                 duration: 4000,
                 style: toastStyle,

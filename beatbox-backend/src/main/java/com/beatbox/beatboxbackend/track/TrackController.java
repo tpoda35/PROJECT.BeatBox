@@ -1,6 +1,5 @@
 package com.beatbox.beatboxbackend.track;
 
-import com.beatbox.beatboxbackend.track.dto.TrackDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.HttpHeaders;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+import java.net.URI;
 import java.util.UUID;
 
 @RestController
@@ -19,15 +18,17 @@ public class TrackController {
 
     private final TrackService trackService;
 
-    @PostMapping("/upload")
-    public void uploadTrack(
+    @PostMapping
+    public ResponseEntity<Void> uploadTrack(
             @RequestParam("title") String title,
             @RequestParam("file") MultipartFile file
     ) throws IOException {
-        trackService.uploadTrack(title, file);
+        UUID newTrackId = trackService.uploadTrack(title, file).getId();
+        URI location = URI.create("/api/tracks/" + newTrackId);
+        return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/stream/{trackId}")
+    @GetMapping("/{trackId}/stream")
     public ResponseEntity<ResourceRegion> streamTrack(
             @PathVariable UUID trackId,
             @RequestHeader HttpHeaders headers
@@ -35,13 +36,9 @@ public class TrackController {
         return trackService.streamTrack(trackId, headers);
     }
 
-    @GetMapping
-    public List<TrackDto> getTracks() {
-        return trackService.getTracks();
-    }
-
-    @PostMapping("/{trackId}/view")
-    public void recordView(@PathVariable UUID trackId) {
+    @PostMapping("/{trackId}/views")
+    public ResponseEntity<Void> recordView(@PathVariable UUID trackId) {
         trackService.recordView(trackId);
+        return ResponseEntity.noContent().build();
     }
 }

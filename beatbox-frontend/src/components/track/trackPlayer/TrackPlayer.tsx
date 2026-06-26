@@ -66,7 +66,7 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
             if (listenedSecondsRef.current >= 30) {
                 viewCountedRef.current = true;
 
-                api.post(`/tracks/${trackId}/view`).catch((err) => {
+                api.post(`/tracks/${trackId}/views`).catch((err) => {
                     console.error("Failed to record view:", err);
                 });
             }
@@ -75,7 +75,7 @@ export default function TrackPlayer({ trackId, url }: TrackPlayerProps) {
         return () => {
             wavesurferRef.current?.destroy();
         };
-    }, [trackId, url]);
+    }, [api, trackId, url]);
 
     const togglePlay = () => {
         wavesurferRef.current?.playPause();

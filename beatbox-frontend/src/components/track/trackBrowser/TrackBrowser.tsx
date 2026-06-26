@@ -15,8 +15,8 @@ const TrackBrowser = () => {
     useEffect(() => {
         const fetchTracks = async () => {
             try {
-                const result = await api.get<TrackDto[]>("/tracks");
-                setTracks(result);
+                const result = await api.get<{ content: TrackDto[] }>("/me/recommended-tracks?pageSize=6");
+                setTracks(result.content);
             } catch (err) {
                 console.error("Failed to fetch artists", err);
             }

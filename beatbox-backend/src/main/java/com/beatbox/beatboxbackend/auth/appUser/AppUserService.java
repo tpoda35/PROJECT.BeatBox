@@ -15,5 +15,4 @@ public interface AppUserService {
     void seedAppUser(UUID keycloakId, String preferredUsername);
 
     List<ArtistDto> getRecommendedArtists();
-    Page<TrackLikeDto> getLikedTracks(int pageNum, int pageSize);
 }

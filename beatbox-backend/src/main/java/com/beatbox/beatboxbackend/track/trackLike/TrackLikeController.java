@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/tracks/{trackId}/like")
+@RequestMapping("/api/tracks/{trackId}/likes")
 @RequiredArgsConstructor
 public class TrackLikeController {
 
@@ -16,17 +16,13 @@ public class TrackLikeController {
 
     @PostMapping
     public ResponseEntity<Void> likeTrack(@PathVariable UUID trackId) {
-
         trackLikeService.likeTrack(trackId);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> unlikeTrack(@PathVariable UUID trackId) {
-
         trackLikeService.unlikeTrack(trackId);
-
         return ResponseEntity.noContent().build();
     }
 }

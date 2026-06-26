@@ -7,10 +7,7 @@ const TrackPlayBar = () => {
 
     if (!selectedTrackId) return null;
 
-    // Pass the direct stream URL — no Axios blob download needed.
-    // WaveSurfer's MediaElement backend will handle range requests natively,
-    // just like a browser <audio> element would.
-    const streamUrl = `http://localhost:8090/api/tracks/stream/${selectedTrackId}`;
+    const streamUrl = `http://localhost:8090/api/tracks/${selectedTrackId}/stream`;
 
     return (
         <div className={styles.trackPlayBar}>

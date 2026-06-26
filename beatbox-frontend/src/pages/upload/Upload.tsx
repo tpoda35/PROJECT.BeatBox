@@ -96,7 +96,7 @@ const Upload = () => {
             formData.append(key, String(val));
         });
 
-        const result = await api.post("/tracks/upload", formData);
+        const result = await api.post("/tracks", formData);
         console.log("Uploaded:", result);
     };
 
