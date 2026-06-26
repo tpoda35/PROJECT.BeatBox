@@ -3,7 +3,6 @@ package com.beatbox.beatboxbackend.auth.appUser;
 import com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto;
 import com.beatbox.beatboxbackend.auth.appUser.exception.AppUserNotFoundException;
 import com.beatbox.beatboxbackend.auth.exception.AuthException;
-import com.beatbox.beatboxbackend.track.trackLike.TrackLikeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,7 +26,6 @@ import static com.beatbox.beatboxbackend.auth.appUser.AppUserMapper.createAppUse
 public class AppUserServiceImpl implements AppUserService {
 
     private final AppUserRepository appUserRepository;
-    private final TrackLikeRepository trackLikeRepository;
 
     @Override
     public AppUser getLoggedInUser() {

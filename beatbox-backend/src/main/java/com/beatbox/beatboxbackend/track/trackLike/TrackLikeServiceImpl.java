@@ -64,11 +64,6 @@ public class TrackLikeServiceImpl implements TrackLikeService {
     }
 
     @Override
-    public Long getLikeCount(Track track) {
-        return trackLikeRepository.countByTrack(track);
-    }
-
-    @Override
     public Page<TrackLikeDto> getLikedTracks(int pageNum, int pageSize) {
         AppUser loggedInUser = appUserService.getLoggedInUserOptional()
                 .orElseThrow(AuthException::new);

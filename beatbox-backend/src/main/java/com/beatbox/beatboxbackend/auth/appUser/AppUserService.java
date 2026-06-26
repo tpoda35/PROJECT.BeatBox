@@ -1,8 +1,6 @@
 package com.beatbox.beatboxbackend.auth.appUser;
 
 import com.beatbox.beatboxbackend.auth.appUser.dto.ArtistDto;
-import com.beatbox.beatboxbackend.track.trackLike.dto.TrackLikeDto;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
